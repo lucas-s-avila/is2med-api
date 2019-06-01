@@ -3,18 +3,18 @@
 require_once('routing/Router.php');
 
 Router::get('/', function($request) {
-    echo('home');
+    print_r($request);
 });
 
 Router::get('/doctors', function($request) {
     echo('doctors');
+    echo($request.'<br>');
 });
 
-Router::get('/doctors/3/details', function($request) {
-    echo('doctors');
+Router::get('/doctors/[0-9]*', function($request, $id) {
+    echo('doctors-id: '.$id);
+    echo($request.'<br>');
 });
-
-phpinfo();
 
 Router::run('/is2med-api');
 

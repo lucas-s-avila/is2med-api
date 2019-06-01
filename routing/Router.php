@@ -15,10 +15,10 @@ class Router {
         $pathArray = array_filter($pathArray, function($s) { return $s != ''; });
         $pathArray = array_map(function($s) { return '('.$s.')'; }, $pathArray);
         $pattern = implode('/', $pathArray);
-        if ($pattern == '/') {
+        if ($pattern == '') {
             $pattern = '^[/]?$';
         } else {
-            $pattern = '^/'.$pattern.'[/]?';
+            $pattern = '^/'.$pattern.'[/]?$';
         }
         self::$routes[$method][$pattern] = $function;
     }
@@ -44,18 +44,15 @@ class Router {
         self::$methodNotAllowedFunction = $function;
     }
     public static function run($basepath) {
-        $parsedURL = parse_url($_SERVER['REQUEST_URI']);
-        if(isset($parsed_url['path'])){
-            $path = $parsed_url['path'];
-            $path = preg_replace('^/'.preg_quote($basepath), '', $path);
-        } else {
-            $path = '/';
-        }
+        $path = preg_replace('#^'.$basepath.'#', '', $_SERVER['REQUEST_URI']);
         $method = $_SERVER['REQUEST_METHOD'];
-        echo($path);
         foreach (self::$routes[$method] as $pattern => $function) {
-            print_r($pattern);
-            echo('<br/>');
+            if (preg_match('#'.$pattern.'#', $path, $matches)) {
+                array_shift($matches);
+                $args = array_unshift($matches, $_REQUEST);
+                call_user_func_array($function, $matches);
+                break;
+            }
         }
     }
 }
