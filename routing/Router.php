@@ -9,7 +9,6 @@ class Router {
         'DELETE' => array()
     );
     private static $notFoundFunction;
-    private static $methodNotAllowedFunction;
     private static function add($method, $pattern, $function) {
         $pathArray = explode('/', $pattern);
         $pathArray = array_filter($pathArray, function($s) { return $s != ''; });
@@ -40,18 +39,23 @@ class Router {
     public static function notFound($function) {
         self::$notFoundFunction = $function;
     }
-    public static function methodNotAllowed($function) {
-        self::$methodNotAllowedFunction = $function;
-    }
     public static function run($basepath) {
         $path = preg_replace('#^'.$basepath.'#', '', $_SERVER['REQUEST_URI']);
         $method = $_SERVER['REQUEST_METHOD'];
+        $pathNotFound = true;
         foreach (self::$routes[$method] as $pattern => $function) {
             if (preg_match('#'.$pattern.'#', $path, $matches)) {
                 array_shift($matches);
                 $args = array_unshift($matches, $_REQUEST);
                 call_user_func_array($function, $matches);
+                $pathNotFound = false;
                 break;
+            }
+        }
+        if ($pathNotFound) {
+            header("HTTP/1.0 404 Not Found");
+            if (self::$notFoundFunction != null) {
+                call_user_func(self::$notFoundFunction, array($_REQUEST));
             }
         }
     }

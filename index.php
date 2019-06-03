@@ -16,6 +16,10 @@ Router::get('/doctors/[0-9]*', function($request, $id) {
     echo($request.'<br>');
 });
 
+Router::notFound(function($request) {
+    echo("NOT FOUND");
+});
+
 Router::run('/is2med-api');
 
 ?>
