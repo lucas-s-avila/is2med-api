@@ -1,6 +1,6 @@
 <?php
 
-class BasicInfo {
+class BasicInfo implements JsonSerializable{
     private $id;
     private $name;
     private $address;
@@ -39,6 +39,11 @@ class BasicInfo {
 
     function setPhone($phone) {
         $this->phone = $phone;
+    }
+    
+    public function jsonSerialize() {
+        $array = array(id => $this->getId());
+        return $array;
     }
 }
 

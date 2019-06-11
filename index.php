@@ -1,25 +1,5 @@
 <?php
 
-require_once('routing/Router.php');
-
-Router::get('/', function($request) {
-    print_r($request);
-});
-
-Router::get('/doctors', function($request) {
-    echo('doctors');
-    echo($request.'<br>');
-});
-
-Router::get('/doctors/[0-9]*', function($request, $id) {
-    echo('doctors-id: '.$id);
-    echo($request.'<br>');
-});
-
-Router::notFound(function($request) {
-    echo("NOT FOUND");
-});
-
-Router::run('/is2med-api');
+header("HTTP/1.0 405 Method Not Allowed");
 
 ?>
