@@ -1,0 +1,10 @@
+<doctors>
+    <doctor>
+        <id>123</id>
+        <name>Igor Maurell</name>
+        <address>Rio Grande</address>
+        <phone>12345678</phone>
+        <specialization>Cardiologist</specialization>
+        <crm>456</crm>
+    </doctor>
+</doctors>
