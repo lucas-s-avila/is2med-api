@@ -42,7 +42,10 @@ class BasicInfo implements JsonSerializable{
     }
     
     public function jsonSerialize() {
-        $array = array(id => $this->getId());
+        $array = array( 'id' => $this->getId(),
+                        'name' => $this->getName(),
+                        'address' => $this->getAddress(),
+                        'phone' => $this->getPhone());
         return $array;
     }
 }

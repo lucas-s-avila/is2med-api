@@ -7,4 +7,12 @@
         <specialization>Cardiologist</specialization>
         <crm>456</crm>
     </doctor>
+    <doctor>
+        <id>456</id>
+        <name>Igor Maurell</name>
+        <address>Rio Grande</address>
+        <phone>12345678</phone>
+        <specialization>Cardiologist</specialization>
+        <crm>457</crm>
+    </doctor>
 </doctors>
