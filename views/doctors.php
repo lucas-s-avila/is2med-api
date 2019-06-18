@@ -45,21 +45,29 @@ function getDoctors() {
 }
 
 function getDoctor($id) {
-    $doctors = loadDocs();
-    $find = false;
-    foreach ($doctors as $doc) {
-        if ($doc->getId() == $id) {
-            $find = true;
-            header('Content-Type: application/json');
-            echo json_encode($doc);
-        }
-    }
-    if (!$find) {
+    $doc = loadDoc($id);
+    if (gettype($doc) == "object") {
+        header("Content-Type: application/json");
+        echo json_encode($doc);
+    } else {
         header("HTTP/1.0 404 Not Found");
     }
 }
 
 function insertDoctor() {
     $data = json_decode(file_get_contents('php://input'), true);
+    $response = writeNewDoctor($data);
+    header($response);
+}
+
+function updateDoctor($id) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $response = writeDoctor($id,$data);
+    header($response);
+}
+
+function deleteDoctor($id) {
+    $response = removeDoctor($id);
+    header($response);
 }
 ?>
