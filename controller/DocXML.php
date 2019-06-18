@@ -15,7 +15,7 @@ function loadDocs() {
 function loadDoc($id) {
     $doctors = loadDocs();
     foreach($doctors as $doc) {
-        if($doc->id == $id) {
+        if($doc->getId() == $id) {
             return $doc;
         }
     }
@@ -23,7 +23,7 @@ function loadDoc($id) {
 }
 
 function writeNewDoctor($data) {
-    $doctor = new Doctor(intval($data["id"]), (string) $data["name"], (string) $data["address"], (string) $data["phone"], (string) $data["specialization"], (string) $data["crm"])
+    $doctor = new Doctor(intval($data["id"]), (string) $data["name"], (string) $data["address"], (string) $data["phone"], (string) $data["specialization"], (string) $data["crm"]);
     $xmlDoc = simplexml_load_file("../xml/doctors.xml");
     $doc = $xmlDoc->addChild("doctor");
     $doc->addChild("id",(string) $doctor-HTTP/1.0>getId());
