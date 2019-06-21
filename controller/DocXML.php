@@ -26,7 +26,7 @@ function writeNewDoctor($data) {
     $doctor = new Doctor(intval($data["id"]), (string) $data["name"], (string) $data["address"], (string) $data["phone"], (string) $data["specialization"], (string) $data["crm"]);
     $xmlDoc = simplexml_load_file("../xml/doctors.xml");
     $doc = $xmlDoc->addChild("doctor");
-    $doc->addChild("id",(string) $doctor-HTTP/1.0>getId());
+    $doc->addChild("id",(string) $doctor->getId());
     $doc->addChild("name",(string) $doctor->getName());
     $doc->addChild("address",(string) $doctor->getAddress());
     $doc->addChild("phone",(string) $doctor->getPhone());
@@ -56,7 +56,7 @@ function writeDoctor($id, $data) {
         foreach($xmlDoc as $doctor) {
             if(intval($doctor->id) == $doc->getId()) {
                 $doctor->name = $doc->getName();
-                $doctor->address = $doc->getAddres();
+                $doctor->address = $doc->getAddress();
                 $doctor->phone = $doc->getPhone();
                 $doctor->specialization = $doc->getSpecialization();
                 $doctor->crm = $doc->getCrm();
@@ -76,16 +76,12 @@ function removeDoctor($id) {
     $doc = loadDoc($id);
     if(gettype($doc) == "object") {
         $xmlDoc = simplexml_load_file("../xml/doctors.xml");
-        $xmlString = 
-        "<doctors>
-        </doctors>";
-        $newXML = simplexml_load_string($xmlString);
         foreach($xmlDoc as $doctor) {
-            if(intval($doctor->$id) != $doc->getId()) {
-                $newXML->addChild($doctor);
+            if(intval($doctor->id) == $doc->getId()) {
+                unset($doctor[0]);
             }
         }
-        $write = simplexml_import_dom($newXML);
+        $write = simplexml_import_dom($xmlDoc);
         $write->saveXML("../xml/doctors.xml");
         return "HTTP/1.0 200 OK";
     } else {

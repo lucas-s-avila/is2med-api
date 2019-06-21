@@ -25,6 +25,7 @@ switch($request_method) {
         else {
             header("HTTP/1.0 405 Method Not Allowed");
         }
+        break;
     case 'DELETE':
         if(!empty($_GET["id"])) {
             $id=intval($_GET["id"]);
@@ -33,6 +34,7 @@ switch($request_method) {
         else {
             header("HTTP/1.0 405 Method Not Allowed");
         }
+        break;
     default:
         header("HTTP/1.0 405 Method Not Allowed");
         break;
