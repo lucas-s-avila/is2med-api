@@ -1,6 +1,6 @@
 <?php
 
-class BasicInfo implements JsonSerializable{
+class BasicInfo implements JsonSerializable {
     private $id;
     private $name;
     private $address;
@@ -40,13 +40,14 @@ class BasicInfo implements JsonSerializable{
     function setPhone($phone) {
         $this->phone = $phone;
     }
-    
+
     public function jsonSerialize() {
-        $array = array( 'id' => $this->getId(),
-                        'name' => $this->getName(),
-                        'address' => $this->getAddress(),
-                        'phone' => $this->getPhone());
-        return $array;
+        return array(
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "address" => $this->getAddress(),
+            "phone" => $this->getPhone()
+        );
     }
 }
 
