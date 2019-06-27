@@ -44,6 +44,15 @@ class User implements JsonSerializable {
     function setGroup($group) {
         $this->group = $group;
     }
+
+    public function jsonSerialize() {
+        return array(
+            "username" => $this->getUsername(),
+            "password" => $this->getPassword(),
+            "id" => $this->getProfileId(),
+            "group" => $this->getGroup()
+        );
+    }
 }
 
 ?>

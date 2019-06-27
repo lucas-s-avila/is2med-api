@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<users>
+    <user>
+        <username>Admin</username>
+        <password>Admin</password>
+        <profile_id>0</profile_id>
+        <group>admin</group>
+    </user>
+</users>

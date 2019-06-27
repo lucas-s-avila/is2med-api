@@ -3,8 +3,6 @@
 require_once("../models/Doctor.php");
 libxml_use_internal_errors(true);
 
-$idNum = 200;
-
 function loadDocs() {
     $xmlDoc = simplexml_load_file("../xml/doctors.xml");
     $doctors = array();
@@ -25,13 +23,12 @@ function loadDoc($id) {
 }
 
 function writeNewDoctor($data) {
-    global $idNum;
-    $idNum++;
-    $doctor = new Doctor($idNum, (string) $data["name"], (string) $data["address"], (string) $data["phone"], (string) $data["specialization"], (string) $data["crm"]);
+    $id = time();
+    $doctor = new Doctor($id, (string) $data["name"], (string) $data["address"], (string) $data["phone"], (string) $data["specialization"], (string) $data["crm"]);
     $xmlDoc = simplexml_load_file("../xml/doctors.xml");
     $doc = $xmlDoc->addChild("doctor");
     
-    $doc->addChild("id",(string) $idNum);
+    $doc->addChild("id",(string) $doctor->getId());
     $doc->addChild("name",(string) $doctor->getName());
     $doc->addChild("address",(string) $doctor->getAddress());
     $doc->addChild("phone",(string) $doctor->getPhone());
@@ -84,11 +81,11 @@ function removeDoctor($id) {
         foreach($xmlDoc as $doctor) {
             if(intval($doctor->id) == $doc->getId()) {
                 unset($doctor[0]);
+                $write = simplexml_import_dom($xmlDoc);
+                $write->saveXML("../xml/doctors.xml");
+                return "HTTP/1.0 200 OK";
             }
         }
-        $write = simplexml_import_dom($xmlDoc);
-        $write->saveXML("../xml/doctors.xml");
-        return "HTTP/1.0 200 OK";
     } else {
         return "HTTP/1.0 404 Not Found";
     }

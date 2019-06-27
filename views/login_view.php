@@ -1,6 +1,6 @@
 <?php
 
-require_once("../models/User.php");
+require_once("../controller/LoginCtrl.php");
 
 $request_method=$_SERVER["REQUEST_METHOD"];
 
