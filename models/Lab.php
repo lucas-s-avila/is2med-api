@@ -27,6 +27,13 @@ class Lab extends BasicInfo {
         $this->cnpj = $cnpj;
     }
 
+    public function jsonSerialize() {
+        $array = parent::jsonSerialize();
+        $array['examType'] = $this->getExamType();
+        $array['cnpj'] = $this->getCnpj();
+        return $array;
+    }
+
 }
 
 ?>

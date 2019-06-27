@@ -62,6 +62,16 @@ class Appointment {
     function setNotes($notes) {
         $this->notes = $notes;
     }
+
+    public function jsonSerialize() {
+        return array(
+            "id" => $this->getId(),
+            "doctor" => $this->getDoctor(),
+            "pacient" => $this->getPacient(),
+            "prescription" => $this->getPrescription(),
+            "notes" => $this->getNotes()            
+        );
+    }
 }
 
 ?>

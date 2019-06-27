@@ -2,11 +2,9 @@
 
 class BasicInfo implements JsonSerializable {
     private $id;
-    private $name;
+    private $username;
     private $address;
     private $phone;
-    private $username;
-    private $password;
 
     function __construct($id, $name, $address, $phone) {
         $this->id = $id;

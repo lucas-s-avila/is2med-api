@@ -37,6 +37,14 @@ class Pacient extends BasicInfo {
         $this->cpf = $cpf;
     }
 
+    public function jsonSerialize() {
+        $array = parent::jsonSerialize();
+        $array['gender'] = $this->getGender();
+        $array['birthday'] = $this->getBirthday();
+        $array['cpf'] = $this->getCpf();
+        return $array;
+    }
+
 }
 
 ?>

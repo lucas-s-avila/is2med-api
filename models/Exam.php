@@ -62,6 +62,17 @@ class Exam {
     function setResult($result) {
         $this->result = $result;
     }
+
+    public function jsonSerialize() {
+        return array(
+            "id" => $this->getId(),
+            "date" => $this->getDate(),
+            "lab" => $this->getLab(),
+            "pacient" => $this->getPacient(),
+            "type" => $this->getType(),
+            "result" => $this->getResult()            
+        );
+    }
 }
 
 ?>

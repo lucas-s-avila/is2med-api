@@ -1,6 +1,7 @@
 DirectoryIndex index.php
 RewriteEngine on
 RewriteBase /is2med-api/
+RewriteRule ^login/?$ views/login_view.php [NC,L]
 RewriteRule ^doctors/?$ views/doctors.php [NC,L]
 RewriteRule ^doctors/([0-9]+)/?$ views/doctors.php?id=$1 [NC,L]
 RewriteRule ^pacients/?$ views/pacients.php [NC,L]
