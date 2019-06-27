@@ -5,8 +5,8 @@ class Doctor extends BasicInfo {
     private $specialization;
     private $crm;
 
-    function __construct($id, $name, $address, $phone, $specialization, $crm) {
-        parent::__construct($id, $name, $address, $phone);
+    function __construct($id, $name, $address, $phone, $email, $specialization, $crm) {
+        parent::__construct($id, $name, $address, $phone, $email);
         $this->specialization = $specialization;
         $this->crm = $crm;
     }

@@ -5,12 +5,14 @@ class BasicInfo implements JsonSerializable {
     private $username;
     private $address;
     private $phone;
+    private $email;
 
-    function __construct($id, $name, $address, $phone) {
+    function __construct($id, $name, $address, $phone, $email) {
         $this->id = $id;
         $this->name = $name;
         $this->address = $address;
         $this->phone = $phone;
+        $this->email = $email;
     }
 
     function getId() {
@@ -41,12 +43,21 @@ class BasicInfo implements JsonSerializable {
         $this->phone = $phone;
     }
 
+    function getEmail() {
+        return $this->email;
+    }
+
+    function setEmail($email) {
+        $this->email = $email;
+    }
+
     public function jsonSerialize() {
         return array(
             "id" => $this->getId(),
             "name" => $this->getName(),
             "address" => $this->getAddress(),
-            "phone" => $this->getPhone()
+            "phone" => $this->getPhone(),
+            "email" => $this->getEmail()
         );
     }
 }

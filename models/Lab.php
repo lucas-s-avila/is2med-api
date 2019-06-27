@@ -5,8 +5,8 @@ class Lab extends BasicInfo {
     private $examType;
     private $cnpj;
 
-    function __construct($id, $name, $address, $phone, $examType, $cnpj) {
-        parent::__construct($id, $name, $address, $phone);
+    function __construct($id, $name, $address, $phone, $email, $examType, $cnpj) {
+        parent::__construct($id, $name, $address, $phone, $email);
         $this->examType = $examType;
         $this->cnpj = $cnpj;
     }

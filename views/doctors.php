@@ -26,6 +26,15 @@ switch($request_method) {
             header("HTTP/1.0 405 Method Not Allowed");
         }
         break;
+    case 'PATCH':
+        if(!empty($_GET["id"])) {
+            $id=intval($_GET["id"]);
+            updateAttribute($id);
+        }
+        else {
+            header("HTTP/1.0 405 Method Not Allowed");
+        }
+        break;
     case 'DELETE':
         if(!empty($_GET["id"])) {
             $id=intval($_GET["id"]);
@@ -80,8 +89,21 @@ function updateDoctor($id) {
     }
 }
 
+function updateAttribute($id) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $response = writeAttribute($id,$data);
+    if (gettype($response) == "object") {
+        header("HTTP/1.0 200 OK");
+        header("Content-Type: application/json");
+        echo json_encode($response);
+    } else {
+        header($response);
+    }
+}
+
 function deleteDoctor($id) {
     $response = removeDoctor($id);
     header($response);
 }
+
 ?>

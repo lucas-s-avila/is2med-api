@@ -6,8 +6,8 @@ class Pacient extends BasicInfo {
     private $birthday;
     private $cpf;
 
-    function __construct($id, $name, $address, $phone, $gender, $birthday, $cpf) {
-        parent::__construct($id, $name, $address, $phone);
+    function __construct($id, $name, $address, $phone, $email, $gender, $birthday, $cpf) {
+        parent::__construct($id, $name, $address, $phone, $email);
         $this->gender = $gender;
         $this->birthday = $birthday;
         $this->cpf = $cpf;

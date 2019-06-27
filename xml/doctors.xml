@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <doctors>
-    
     <doctor>
         <id>456</id>
         <name>Igor Maurell</name>
-        <address>Rio Grande</address>
-        <phone>12345678</phone>
-        <specialization>Cardiologist</specialization>
+        <address>Pelotas</address>
+        <phone>12345679</phone>
+        <email>exemplo@exemplo.com</email>
+        <specialization>Urologist</specialization>
         <crm>457</crm>
     </doctor>
-<doctor><id>201</id><name>Igor Maurell</name><address>Rio Grande</address><phone>12345679</phone><specialization>Cardiologist</specialization><crm>457</crm></doctor>
+<doctor><id>201</id><name>Lucas Avila</name><address>Rio Grande</address><phone>12345679</phone><email>exemplo@exemplo.com</email><specialization>Cardiologist</specialization><crm>457</crm></doctor>
+</doctors>
