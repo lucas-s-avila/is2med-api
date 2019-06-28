@@ -1,16 +1,22 @@
 <?php
 
 class User implements JsonSerializable {
+    private $id;
     private $username;
     private $password;
-    private $profile_id;
+    private $profileId;
     private $group;
 
-    function __construct($username, $password, $profile_id, $group) {
+    function __construct($id, $username, $password, $profileId, $group) {
+        $this->id = $id;
         $this->username = $username;
         $this->password = $password;
-        $this->profile_id = $profile_id;
+        $this->profileId = $profileId;
         $this->group = $group;
+    }
+
+    function getId() {
+        return $this->id;
     }
 
     function getUsername() {
@@ -30,11 +36,11 @@ class User implements JsonSerializable {
     }
 
     function getProfileId() {
-        return $this->profile_id;
+        return $this->profileId;
     }
 
-    function setProfileId($profile_id) {
-        $this->profile_id = $profile_id;
+    function setProfileId($profileId) {
+        $this->profileId = $profileId;
     }
 
     function getGroup() {
@@ -47,9 +53,10 @@ class User implements JsonSerializable {
 
     public function jsonSerialize() {
         return array(
+            "id" => $this->getId(),
             "username" => $this->getUsername(),
             "password" => $this->getPassword(),
-            "id" => $this->getProfileId(),
+            "profileId" => $this->getProfileId(),
             "group" => $this->getGroup()
         );
     }

@@ -6,7 +6,7 @@ function loadUsers() {
     $xmlUsers = simplexml_load_file("../xml/users.xml");
     $users = array();
     foreach($xmlUsers->Children() as $user) {
-        $users[] = new User((string) $user->username, (string) $user->password, (string) $user->profile_id, (string) $user->group);
+        $users[] = new User((string) $user->id, (string) $user->username, (string) $user->password, (string) $user->profileId, (string) $user->group);
     }
     return $users;
 }
@@ -16,7 +16,7 @@ function login($data) {
     foreach($users as $user) {
         if($user->getUsername() == $data["username"]) {
             if($user->getPassword() == $data["password"]) {
-                return "HTTP/1.0 200 OK";
+                return $user;
             }
         }
     }

@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <users>
     <user>
+        <id/>
         <username>Admin</username>
         <password>Admin</password>
-        <profile_id>0</profile_id>
+        <groupId/>
         <group>admin</group>
     </user>
 </users>

@@ -1,6 +1,6 @@
 <?php
 
-require_once("../controller/DocXML.php");
+require_once("../controller/UserXML.php");
 
 $request_method=$_SERVER["REQUEST_METHOD"];
 
@@ -8,19 +8,19 @@ switch($request_method) {
     case 'GET':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
-            getDoctor($id);
+            getUser($id);
         }
         else {
-            getDoctors();
+            getUsers();
         }
         break;
     case 'POST':
-        insertDoctor();
+        insertUser();
         break;
     case 'PUT':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
-            updateDoctor($id);
+            updateUser($id);
         }
         else {
             header("HTTP/1.0 405 Method Not Allowed");
@@ -29,7 +29,7 @@ switch($request_method) {
     case 'PATCH':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
-            updateAttributeDoc($id);
+            updateAttributeUser($id);
         }
         else {
             header("HTTP/1.0 405 Method Not Allowed");
@@ -38,7 +38,7 @@ switch($request_method) {
     case 'DELETE':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
-            deleteDoctor($id);
+            deleteUser($id);
         }
         else {
             header("HTTP/1.0 405 Method Not Allowed");
@@ -49,25 +49,25 @@ switch($request_method) {
         break;
 }
 
-function getDoctors() {
-    $doctors = loadDocs();
+function getUsers() {
+    $users = loadUsers();
     header('Content-Type: application/json');
-    echo json_encode($doctors);
+    echo json_encode($users);
 }
 
-function getDoctor($id) {
-    $doc = loadDoc($id);
-    if (gettype($doc) == "object") {
+function getUser($id) {
+    $user = loadUser($id);
+    if (gettype($user) == "object") {
         header("Content-Type: application/json");
-        echo json_encode($doc);
+        echo json_encode($user);
     } else {
         header("HTTP/1.0 404 Not Found");
     }
 }
 
-function insertDoctor() {
+function insertUser() {
     $data = json_decode(file_get_contents('php://input'), true);
-    $response = writeNewDoctor($data);
+    $response = writeNewUser($data);
     if (gettype($response) == "object") {
         header("HTTP/1.0 201 Created");
         header("Content-Type: application/json");
@@ -77,9 +77,9 @@ function insertDoctor() {
     }
 }
 
-function updateDoctor($id) {
+function updateUser($id) {
     $data = json_decode(file_get_contents('php://input'), true);
-    $response = writeDoctor($id,$data);
+    $response = writeUser($id,$data);
     if (gettype($response) == "object") {
         header("HTTP/1.0 200 OK");
         header("Content-Type: application/json");
@@ -89,9 +89,9 @@ function updateDoctor($id) {
     }
 }
 
-function updateAttributeDoc($id) {
+function updateAttributeUser($id) {
     $data = json_decode(file_get_contents('php://input'), true);
-    $response = writeAttributeDoc($id,$data);
+    $response = writeAttributeUser($id,$data);
     if (gettype($response) == "object") {
         header("HTTP/1.0 200 OK");
         header("Content-Type: application/json");
@@ -101,8 +101,8 @@ function updateAttributeDoc($id) {
     }
 }
 
-function deleteDoctor($id) {
-    $response = removeDoctor($id);
+function deleteUser($id) {
+    $response = removeUser($id);
     header($response);
 }
 

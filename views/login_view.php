@@ -10,7 +10,13 @@ if($request_method == "GET") {
 
     $response = login($data);
 
-    header($response);
+    if(gettype($response) == "object") {
+        header("HTTP/1.0 200 OK");
+        header("Content-Type: application/json");
+        echo json_encode($response);
+    } else {
+        header($response);
+    }
 
 } else {
     header("HTTP/1.0 405 Method Not Allowed");
