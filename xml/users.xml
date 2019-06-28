@@ -4,7 +4,7 @@
         <id/>
         <username>Admin</username>
         <password>Admin</password>
-        <groupId></groupID>
+        <groupId></groupId>
         <group>admin</group>
     </user>
 </users>
