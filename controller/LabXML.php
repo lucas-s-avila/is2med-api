@@ -69,6 +69,7 @@ function writeNewLab($data) {
     $labNode->addChild("name", $lab->getName());
     $labNode->addChild("address", $lab->getAddress());
     $labNode->addChild("phone", $lab->getPhone());
+    $labNode->addChild("email", $lab->getEmail());
     $labNode->addChild("examType", $lab->getExamType());
     $labNode->addChild("cnpj", $lab->getCnpj());
 
@@ -95,6 +96,7 @@ function writeLab($id, $data) {
         $lab->setName(strtoupper((string) $data["name"]));
         $lab->setAddress((string) $data["address"]);
         $lab->setPhone((string) $data["phone"]);
+        $lab->setEmail((string) $data["email"]);
         $lab->setExamType((string) $data["examType"]);
         $lab->setCnpj((string) $data["cnpj"]);
 
@@ -154,8 +156,8 @@ function writeAttributeLab($id, $data) {
                 $LabNode->address = $lab->getAddress();
                 $LabNode->phone = $lab->getPhone();
                 $LabNode->email = $lab->getEmail();
-                $LabNode->specialization = $lab->getSpecialization();
-                $LabNode->crm = $lab->getCrm();
+                $LabNode->examType = $lab->getExamType();
+                $LabNode->cnpj = $lab->getCnpj();
             }
         }
 

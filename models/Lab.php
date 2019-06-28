@@ -23,7 +23,7 @@ class Lab extends BasicInfo {
         return $this->cnpj;
     }
 
-    function setCrm($cnpj) {
+    function setCnpj($cnpj) {
         $this->cnpj = $cnpj;
     }
 
