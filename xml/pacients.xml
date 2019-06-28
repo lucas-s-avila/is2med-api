@@ -1,6 +1,4 @@
 <?xml version="1.0"?>
 <pacients>
 
-</pacients>
-
-
+<pacient><id>1561736152</id><name>LUCAS AVILA</name><address>Rio Grande</address><phone>123456789</phone><email>exemplo@exemplo.com</email><gender>men</gender><birthday>11-07-1998</birthday><cpf>123.456.789-12</cpf></pacient></pacients>

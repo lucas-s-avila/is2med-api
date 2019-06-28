@@ -6,7 +6,11 @@ function loadUsers() {
     $xmlusers = simplexml_load_file("../xml/users.xml");
     $users = array();
     foreach($xmlusers as $user) {
-        $users[] = new User((string) $user->id, (string) $user->username, (string) $user->password, (string) $user->profileId, (string) $user->group);
+        $users[] = new User((string) $user->id, 
+                            (string) $user->username, 
+                            (string) $user->password, 
+                            (string) $user->profileId, 
+                            (string) $user->group);
     }
     return $users;
 }
@@ -23,11 +27,19 @@ function loadUser($id) {
 
 function writeNewUser($data) {
     $id = time();
-    $user = new User((string) $id, (string) $data["username"], (string) $data["password"], (string) $data["profileId"], (string) $data["group"]);
+    $user = new User((string) $id,
+                    (string) $data["username"], 
+                    (string) $data["password"], 
+                    (string) $data["profileId"], 
+                    (string) $data["group"]);
     $xmlusers = simplexml_load_file("../xml/users.xml");
     $userNode = $xmlusers->addChild("user");
     
-    if(!array_key_exists("username", $data) || !array_key_exists("password", $data) || !array_key_exists("profileId", $data) || !array_key_exists("group", $data)) {
+    if(!array_key_exists("username", $data) || 
+        !array_key_exists("password", $data) ||
+        !array_key_exists("profileId", $data) || 
+        !array_key_exists("group", $data)) 
+    {
         return "HTTP/1.0 400 Bad Request";
     }
 
@@ -47,7 +59,11 @@ function writeUser($id, $data) {
     $user = loadUser($id);
     if(gettype($user) == "object") {
 
-        if(!array_key_exists("username", $data) || !array_key_exists("password", $data) || !array_key_exists("profileId", $data) || !array_key_exists("group", $data)) {
+        if(!array_key_exists("username", $data) || 
+            !array_key_exists("password", $data) || 
+            !array_key_exists("profileId", $data) || 
+            !array_key_exists("group", $data)) 
+        {
             return "HTTP/1.0 400 Bad Request";
         }
 

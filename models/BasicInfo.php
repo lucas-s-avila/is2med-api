@@ -2,7 +2,7 @@
 
 class BasicInfo implements JsonSerializable {
     private $id;
-    private $username;
+    private $name;
     private $address;
     private $phone;
     private $email;

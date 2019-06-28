@@ -6,9 +6,31 @@ function loadDocs() {
     $xmlDoc = simplexml_load_file("../xml/doctors.xml");
     $doctors = array();
     foreach($xmlDoc as $doc) {
-        $doctors[] = new Doctor((string) $doc->id, (string) $doc->name, (string) $doc->address, (string) $doc->phone, (string) $doc->email, (string) $doc->specialization, (string) $doc->crm);
+        $doctors[] = new Doctor((string) $doc->id,
+                                (string) $doc->name, 
+                                (string) $doc->address, 
+                                (string) $doc->phone, 
+                                (string) $doc->email, 
+                                (string) $doc->specialization, 
+                                (string) $doc->crm);
     }
     return $doctors;
+}
+
+function loadDocName($name) {
+    $name = strtoupper($name);
+    $doctors = loadDocs();
+    $docs = array();
+    foreach($doctors as $doc) {
+        if(strpos($doc->getName(), $name) === 0) {
+            $docs[] = $doc;
+        }
+    }
+    if(sizeof($docs)>0) {
+        return $docs;
+    } else {
+        return false;
+    }
 }
 
 function loadDoc($id) {
@@ -23,11 +45,23 @@ function loadDoc($id) {
 
 function writeNewDoctor($data) {
     $id = time();
-    $doctor = new Doctor((string) $id, (string) $data["name"], (string) $data["address"], (string) $data["phone"], (string) $data["email"], (string) $data["specialization"], (string) $data["crm"]);
+    $doctor = new Doctor((string) $id,
+                        strtoupper((string) $data["name"]),
+                        (string) $data["address"], 
+                        (string) $data["phone"], 
+                        (string) $data["email"], 
+                        (string) $data["specialization"], 
+                        (string) $data["crm"]);
     $xmlDoc = simplexml_load_file("../xml/doctors.xml");
     $doc = $xmlDoc->addChild("doctor");
     
-    if(!array_key_exists("name", $data) || !array_key_exists("address", $data) || !array_key_exists("phone", $data) || !array_key_exists("email", $data) || !array_key_exists("specialization", $data) || !array_key_exists("crm", $data)) {
+    if(!array_key_exists("name", $data) || 
+        !array_key_exists("address", $data) || 
+        !array_key_exists("phone", $data) || 
+        !array_key_exists("email", $data) || 
+        !array_key_exists("specialization", $data) || 
+        !array_key_exists("crm", $data)) 
+    {
         return "HTTP/1.0 400 Bad Request";
     }
 
@@ -49,11 +83,17 @@ function writeDoctor($id, $data) {
     $doc = loadDoc($id);
     if(gettype($doc) == "object") {
 
-        if(!array_key_exists("name", $data) || !array_key_exists("address", $data) || !array_key_exists("phone", $data) || !array_key_exists("email", $data) || !array_key_exists("specialization", $data) || !array_key_exists("crm", $data)) {
+        if(!array_key_exists("name", $data) || 
+            !array_key_exists("address", $data) || 
+            !array_key_exists("phone", $data) || 
+            !array_key_exists("email", $data) || 
+            !array_key_exists("specialization", $data) || 
+            !array_key_exists("crm", $data)) 
+        {
             return "HTTP/1.0 400 Bad Request";
         }
 
-        $doc->setName((string) $data["name"]);
+        $doc->setName(strtoupper((string) $data["name"]));
         $doc->setAddress((string) $data["address"]);
         $doc->setPhone((string) $data["phone"]);
         $doc->setEmail((string) $data["email"]);
@@ -87,7 +127,7 @@ function writeAttributeDoc($id, $data) {
         foreach($data as $key => $value) {
             switch ($key) {
                 case 'name':
-                    $doc->setName((string) $value);
+                    $doc->setName(strtoupper((string) $value));
                     break;
                 case 'address':
                     $doc->setAddress((string) $value);
@@ -112,7 +152,7 @@ function writeAttributeDoc($id, $data) {
 
         $xmlDoc = simplexml_load_file("../xml/doctors.xml");
         foreach($xmlDoc as $doctor) {
-            if(intval($doctor->id) == $doc->getId()) {
+            if($doctor->id == $doc->getId()) {
                 $doctor->name = $doc->getName();
                 $doctor->address = $doc->getAddress();
                 $doctor->phone = $doc->getPhone();
