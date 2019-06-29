@@ -1,3 +1,11 @@
+<?xml version="1.0"?>
 <appointments>
-
-</appointments>
+    <appointment>
+        <id>1</id>
+        <date>1</date>
+        <doctor>1</doctor>
+        <pacient>1</pacient>
+        <prescription>1</prescription>
+        <notes>1</notes>
+    </appointment>
+<appointment><id>1561767996</id><date>2</date><doctor>2</doctor><pacient>2</pacient><prescription>2</prescription><notes>2</notes></appointment></appointments>

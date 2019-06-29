@@ -2,7 +2,7 @@
 require_once("Doctor.php");
 require_once("Pacient.php");
 
-class Appointment {
+class Appointment implements JsonSerializable {
     private $id;
     private $date;
     private $doctor;
@@ -66,6 +66,7 @@ class Appointment {
     public function jsonSerialize() {
         return array(
             "id" => $this->getId(),
+            "date" => $this->getDate(),
             "doctor" => $this->getDoctor(),
             "pacient" => $this->getPacient(),
             "prescription" => $this->getPrescription(),

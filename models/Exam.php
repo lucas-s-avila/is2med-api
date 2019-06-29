@@ -2,7 +2,7 @@
 require_once("Doctor.php");
 require_once("Pacient.php");
 
-class Exam {
+class Exam implements JsonSerializable {
     private $id;
     private $date;
     private $lab;
