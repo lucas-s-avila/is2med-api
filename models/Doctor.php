@@ -2,21 +2,21 @@
 require_once("BasicInfo.php");
 
 class Doctor extends BasicInfo {
-    private $specialization;
+    private $specialty;
     private $crm;
 
-    function __construct($id, $name, $address, $phone, $email, $specialization, $crm) {
+    function __construct($id, $name, $address, $phone, $email, $specialty, $crm) {
         parent::__construct($id, $name, $address, $phone, $email);
-        $this->specialization = $specialization;
+        $this->specialty = $specialty;
         $this->crm = $crm;
     }
 
-    function getSpecialization() {
-        return $this->specialization;
+    function getSpecialty() {
+        return $this->specialty;
     }
 
-    function setSpecialization($specialization) {
-        $this->specialization = $specialization;
+    function setSpecialty($specialty) {
+        $this->specialty = $specialty;
     }
 
     function getCrm() {
@@ -29,7 +29,7 @@ class Doctor extends BasicInfo {
 
     public function jsonSerialize() {
         $array = parent::jsonSerialize();
-        $array['specialization'] = $this->getSpecialization();
+        $array['specialty'] = $this->getSpecialty();
         $array['crm'] = $this->getCrm();
         return $array;
     }

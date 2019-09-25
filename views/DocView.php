@@ -1,6 +1,7 @@
 <?php
 
-require_once("../controller/DocXML.php");
+#require_once("../controller/DocXML.php");
+require_once("../controller/DocDB.php");
 
 $request_method=$_SERVER["REQUEST_METHOD"];
 
@@ -10,14 +11,24 @@ switch($request_method) {
             $id=$_GET["id"];
             getDoctor($id);
         }
-        elseif (!empty($_GET["name"])) {
-            $name=$_GET["name"];
-            getDoctorName($name);
+        elseif (!empty($_GET["name"]) or !empty($_GET["special
+        ty"]) or !empty($_GET["crm"])) {
+            foreach($_GET as $field => $value) {
+                if(!empty($value)) {
+                    $search[$field] = $value;
+                }
+            }
+            searchDocs($search);
         }
         else {
             getDoctors();
         }
         break;
+    default:
+        header("HTTP/1.0 405 Method Not Allowed");
+        break;
+}
+/*
     case 'POST':
         insertDoctor();
         break;
@@ -52,6 +63,7 @@ switch($request_method) {
         header("HTTP/1.0 405 Method Not Allowed");
         break;
 }
+*/
 
 function getDoctors() {
     $doctors = loadDocs();
@@ -59,16 +71,13 @@ function getDoctors() {
     echo json_encode($doctors);
 }
 
-function getDoctorName($name) {
-    $docs = loadDocName((string) $name);
-    if (gettype($docs) == "array") {
-        header("Content-Type: application/json");
-        echo json_encode($docs);
-    } else {
-        header("HTTP/1.0 404 Not Found");
-    }
+function searchDocs($search) {
+    $docs = loadDocSearch($search);
+    header("Content-Type: application/json");
+    echo json_encode($docs);
 }
 
+/*
 function getDoctor($id) {
     $doc = loadDoc($id);
     if (gettype($doc) == "object") {
@@ -119,5 +128,5 @@ function deleteDoctor($id) {
     $response = removeDoctor($id);
     header($response);
 }
-
+*/
 ?>
