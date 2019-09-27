@@ -72,4 +72,34 @@ function writeNewDoctor($data) {
     }
 }
 
+function writeDoctor($id, $data) {
+    $doc = loadDoc($id);
+    
+    if(gettype($doc) == "object") {
+        $doc->setName($data["Name"]);
+        $doc->setAddress($data["Address"]);
+        $doc->setPhone($data["Phone"]);
+        $doc->setEmail($data["Email"]);
+        $doc->setSpecialty($data["Specialty"]);
+        $doc->setCrm($data["CRM"]);
+
+        global $connection;
+        $sql = "UPDATE Doctor SET Name = '" . $doc->getName() . 
+               "', Address = '" . $doc->getAddress() . 
+               "', Phone = '" . $doc->getPhone() .
+               "', Email = '" . $doc->getEmail() .
+               "', Specialty = '" . $doc->getSpecialty() . 
+               "', CRM = '" . $doc->getCRM() .
+               "' WHERE DoctorID = " . ((string) $id);
+        if($connection->query($sql) === TRUE) {
+            return $doc;
+        } else {
+            $response["Error"] = $connection->error;
+            return $response;
+        }
+    } else {
+        return "HTTP/1.0 404 Not Found";
+    }
+}
+
 ?>
