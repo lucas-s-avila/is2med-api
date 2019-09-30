@@ -37,11 +37,6 @@ switch($request_method) {
             header("HTTP/1.0 405 Method Not Allowed");
         }
         break;
-    default:
-        header("HTTP/1.0 405 Method Not Allowed");
-        break;
-}
-/*
     case 'PATCH':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
@@ -64,7 +59,6 @@ switch($request_method) {
         header("HTTP/1.0 405 Method Not Allowed");
         break;
 }
-*/
 
 function getDoctors() {
     $doctors = loadDocs();
@@ -116,12 +110,16 @@ function updateDoctor($id) {
         header($response);
     }
 }
-/*
+
 function updateAttributeDoc($id) {
     $data = json_decode(file_get_contents('php://input'), true);
     $response = writeAttributeDoc($id,$data);
     if (gettype($response) == "object") {
         header("HTTP/1.0 200 OK");
+        header("Content-Type: application/json");
+        echo json_encode($response);
+    } else if (gettype($response) == "array"){
+        header("HTTP/1.0 400 Bad Request");
         header("Content-Type: application/json");
         echo json_encode($response);
     } else {
@@ -133,5 +131,5 @@ function deleteDoctor($id) {
     $response = removeDoctor($id);
     header($response);
 }
-*/
+
 ?>
