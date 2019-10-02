@@ -33,6 +33,45 @@ function loadDocs() {
     }
 }
 
+function loadDocSearch($search) {
+    global $connection;
+
+    $sql = "SELECT * FROM Doctor WHERE ";
+    
+    if(!is_null($search["name"])) {
+        $sql = $sql . " Name LIKE '%" . $search["name"] . "%'";
+        if(count($search) > 1) {
+            $sql = $sql . " AND ";
+        }
+        unset($search["name"]);
+    }
+
+    if(!is_null($search["specialty"])) {
+        $sql = $sql . " Specialty = '" . $search["specialty"] . "'";
+        if(count($search) > 1) {
+            $sql = $sql . " AND ";
+        }
+        unset($search["specialty"]);
+    }
+
+    if(!is_null($search["crm"])) {
+        $sql = $sql . " CRM = '" . $search["crm"] . "'";
+    }
+
+    $result = $connection->query($sql);
+
+    $doctors = array();
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_array()) {
+            $doc = mountDoc($row);
+            $doctors[] = $doc;
+        }
+        return $doctors;
+    } else {
+        return null;
+    }
+}
+
 function loadDoc($id) {
     global $connection;
 
@@ -102,51 +141,13 @@ function writeDoctor($id, $data) {
     }
 }
 
-function writeAttributeDoc($id, $data) {
-    $doc = loadDoc($id);
-    $sql = "UPDATE Doctor SET ";
-    if(gettype($doc) == "object") {
-        foreach($data as $key => $value) {
-            switch ($key) {
-                case 'Name':
-                    $doc->setName($value);
-                    $sql = $sql . " Name = '" . $doc->getName() . "', ";
-                    break;
-                case 'Address':
-                    $doc->setAddress($value);
-                    $sql = $sql . " Address = '" . $doc->getAddress() . "', ";
-                    break;
-                case 'Phone':
-                    $doc->setPhone($value);
-                    $sql = $sql . " Phone = '" . $doc->getPhone() . "', ";
-                    break;
-                case 'Email':
-                    $doc->setEmail($value);
-                    $sql = $sql . " Email = '" . $doc->getEmail() . "', ";
-                    break;
-                case 'Specialty':
-                    $doc->setSpecialty($value);
-                    $sql = $sql . " Specialty = '" . $doc->getSpecialty() . "', ";
-                    break;
-                case 'CRM':
-                    $doc->setCrm($value);
-                    $sql = $sql . " CRM = '" . $doc->getCRM() . "', ";
-                    break;
-                default:
-                    return "HTTP/1.0 200 OK";
-                    break;
-            }
-        }
+function removeDoctor($id) {
+    global $connection;
 
-        $sql = $sql . "WHERE DoctorID = " . ((string) $id);
-        
-        global $connection;
-        if($connection->query($sql) === TRUE) {
-            return $doc;
-        } else {
-            $response["Error"] = $connection->error;
-            return $response;
-        }
+    $sql = "DELETE FROM Doctor WHERE DoctorID = " . ((string) $id);
+
+    if($connection->query($sql) === TRUE) {
+        return "HTTP/1.0 200 OK";
     } else {
         return "HTTP/1.0 404 Not Found";
     }

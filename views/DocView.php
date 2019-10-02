@@ -11,8 +11,7 @@ switch($request_method) {
             $id=$_GET["id"];
             getDoctor($id);
         }
-        elseif (!empty($_GET["name"]) or !empty($_GET["special
-        ty"]) or !empty($_GET["crm"])) {
+        elseif (!empty($_GET["name"]) or !empty($_GET["specialty"]) or !empty($_GET["crm"])) {
             foreach($_GET as $field => $value) {
                 if(!empty($value)) {
                     $search[$field] = $value;
@@ -32,15 +31,6 @@ switch($request_method) {
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
             updateDoctor($id);
-        }
-        else {
-            header("HTTP/1.0 405 Method Not Allowed");
-        }
-        break;
-    case 'PATCH':
-        if(!empty($_GET["id"])) {
-            $id=$_GET["id"];
-            updateAttributeDoc($id);
         }
         else {
             header("HTTP/1.0 405 Method Not Allowed");
@@ -98,22 +88,6 @@ function insertDoctor() {
 function updateDoctor($id) {
     $data = json_decode(file_get_contents('php://input'), true);
     $response = writeDoctor($id,$data);
-    if (gettype($response) == "object") {
-        header("HTTP/1.0 200 OK");
-        header("Content-Type: application/json");
-        echo json_encode($response);
-    } else if (gettype($response) == "array"){
-        header("HTTP/1.0 400 Bad Request");
-        header("Content-Type: application/json");
-        echo json_encode($response);
-    } else {
-        header($response);
-    }
-}
-
-function updateAttributeDoc($id) {
-    $data = json_decode(file_get_contents('php://input'), true);
-    $response = writeAttributeDoc($id,$data);
     if (gettype($response) == "object") {
         header("HTTP/1.0 200 OK");
         header("Content-Type: application/json");
