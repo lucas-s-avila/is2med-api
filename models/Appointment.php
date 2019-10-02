@@ -6,15 +6,15 @@ class Appointment implements JsonSerializable {
     private $id;
     private $date;
     private $doctor;
-    private $pacient;
+    private $patient;
     private $prescription;
     private $notes;
 
-    function __construct($id, $date, $doctor, $pacient, $prescription, $notes) {
+    function __construct($id, $date, $doctor, $patient, $prescription, $notes) {
         $this->id = $id;
         $this->date = $date;
         $this->doctor = $doctor;
-        $this->pacient = $pacient;
+        $this->pacient = $patient;
         $this->prescription = $prescription;
         $this->notes = $notes;
     }
@@ -39,12 +39,12 @@ class Appointment implements JsonSerializable {
         $this->doctor = $doctor;
     }
 
-    function getPacient() {
-        return $this->pacient;
+    function getPatient() {
+        return $this->patient;
     }
 
-    function setPacient($pacient) {
-        $this->pacient = $pacient;
+    function setPatient($patient) {
+        $this->patient = $patient;
     }
 
     function getPrescription() {
@@ -68,7 +68,7 @@ class Appointment implements JsonSerializable {
             "id" => $this->getId(),
             "date" => $this->getDate(),
             "doctor" => $this->getDoctor(),
-            "pacient" => $this->getPacient(),
+            "patient" => $this->getPatient(),
             "prescription" => $this->getPrescription(),
             "notes" => $this->getNotes()            
         );

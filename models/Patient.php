@@ -1,7 +1,7 @@
 <?php
 require_once("BasicInfo.php");
 
-class Pacient extends BasicInfo {
+class Patient extends BasicInfo {
     private $gender;
     private $birthday;
     private $cpf;

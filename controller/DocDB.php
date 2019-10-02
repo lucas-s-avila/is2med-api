@@ -1,4 +1,5 @@
 <?php
+
 require_once("../models/Doctor.php");
 require_once("config/connection.php");
 $db = new dbObj();

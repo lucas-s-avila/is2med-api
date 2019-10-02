@@ -10,13 +10,13 @@ switch($request_method) {
             $id=$_GET["id"];
             getAppoint($id);
         }
-        elseif (!empty($_GET["doctor"])) {
-            $doctor=$_GET["doctor"];
-            getAppointDoctor($doctor);
-        }
-        elseif (!empty($_GET["pacient"])) {
-            $pacient=$_GET["pacient"];
-            getAppointPacient($pacient);
+        elseif (!empty($_GET["date"]) or !empty($_GET["doctorid"]) or !empty($_GET["patientid"])) {
+            foreach($_GET as $field => $value) {
+                if(!empty($value)) {
+                    $search[$field] = $value;
+                }
+            }
+            searchApps($search);
         }
         else {
             getAppoints();
@@ -29,15 +29,6 @@ switch($request_method) {
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
             updateAppoint($id);
-        }
-        else {
-            header("HTTP/1.0 405 Method Not Allowed");
-        }
-        break;
-    case 'PATCH':
-        if(!empty($_GET["id"])) {
-            $id=$_GET["id"];
-            updateAttributeApp($id);
         }
         else {
             header("HTTP/1.0 405 Method Not Allowed");
@@ -63,24 +54,10 @@ function getAppoints() {
     echo json_encode($appoints);
 }
 
-function getAppointDoctor($doctor) {
-    $apps = loadDocApp((string) $doctor);
-    if (gettype($apps) == "array") {
-        header("Content-Type: application/json");
-        echo json_encode($apps);
-    } else {
-        header("HTTP/1.0 404 Not Found");
-    }
-}
-
-function getAppointPacient($pacient) {
-    $apps = loadPacApp((string) $pacient);
-    if (gettype($apps) == "array") {
-        header("Content-Type: application/json");
-        echo json_encode($apps);
-    } else {
-        header("HTTP/1.0 404 Not Found");
-    }
+function searchDocs($search) {
+    $docs = loadDocSearch($search);
+    header("Content-Type: application/json");
+    echo json_encode($docs);
 }
 
 function getAppoint($id) {
@@ -112,16 +89,8 @@ function updateAppoint($id) {
         header("HTTP/1.0 200 OK");
         header("Content-Type: application/json");
         echo json_encode($response);
-    } else {
-        header($response);
-    }
-}
-
-function updateAttributeApp($id) {
-    $data = json_decode(file_get_contents('php://input'), true);
-    $response = writeAttributeApp($id,$data);
-    if (gettype($response) == "object") {
-        header("HTTP/1.0 200 OK");
+    } else if (gettype($response) == "array"){
+        header("HTTP/1.0 400 Bad Request");
         header("Content-Type: application/json");
         echo json_encode($response);
     } else {

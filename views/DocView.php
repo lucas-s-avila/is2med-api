@@ -1,6 +1,5 @@
 <?php
 
-#require_once("../controller/DocXML.php");
 require_once("../controller/DocDB.php");
 
 $request_method=$_SERVER["REQUEST_METHOD"];
