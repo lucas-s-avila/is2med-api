@@ -54,10 +54,10 @@ function getAppoints() {
     echo json_encode($appoints);
 }
 
-function searchDocs($search) {
-    $docs = loadDocSearch($search);
+function searchApps($search) {
+    $apps = loadDocSearch($search);
     header("Content-Type: application/json");
-    echo json_encode($docs);
+    echo json_encode($apps);
 }
 
 function getAppoint($id) {

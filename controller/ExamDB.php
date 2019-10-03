@@ -2,21 +2,27 @@
 
 require_once("../models/Exam.php");
 require_once("config/connection.php");
-require_once("DocDB.php");
-require_once("PatientDB.php");
+require_once("PatDB.php");
 require_once("LabDB.php");
 
 $db = new dbObj();
 $connection =  $db->getConn();
 
 function mountExm($row) {
+    $patient = loadPat($row["PatientID"]);
+    $lab = loadLab($row["LabID"]);
+
+    if(is_null($patient) or is_null($lab)) {
+        header("HTTP/1.0 404 Not Found");
+        exit();
+    }
+
     $exm = new Exam($row["ExamID"],
-                           $row["Date"],
-                           loadDoc($row["DoctorID"]),
-                           loadPatient($row["PatientID"]),
-                           loadLab($row["LabID"]),
-                           $row["Type"],
-                           $row["Result"]);
+                    $row["Date"],
+                    $patient,
+                    $lab,
+                    $row["ExamType"],
+                    $row["Result"]);
     return $exm;
 }
 
@@ -52,12 +58,12 @@ function loadExmSearch($search) {   //date, exam type, labID, patientID
         unset($search["date"]);
     }
 
-    if(!is_null($search["type"])) {
-        $sql = $sql . " Type = '" . $search["type"] . "'";
+    if(!is_null($search["examtype"])) {
+        $sql = $sql . " ExamType = '" . $search["examtype"] . "'";
         if(count($search) > 1) {
             $sql = $sql . " AND ";
         }
-        unset($search["type"]);
+        unset($search["examtype"]);
     }
 
     if(!is_null($search["patientid"])) {
@@ -101,7 +107,7 @@ function loadExm($id) {
     }
 }
 
-function writeNewexam($data) {
+function writeNewExam($data) {
     $id = time();
     $data["ExamID"] = $id;
 
@@ -109,14 +115,14 @@ function writeNewexam($data) {
 
     global $connection;
 
-    $sql = "INSERT INTO Exam (ExamID, Date, DoctorID, PatientID, LabID, Type, Result) 
+    $sql = "INSERT INTO Exam (ExamID, LabID, PatientID, Date, ExamType, Result) 
                         VALUES (" . $exm->getId() .
-                        ", '" . $exm->getDate() . 
-                        "', '" . $exm->getDoctor()->getId() .
+                        ", '" . $exm->getLab()->getId() .
                         "', '" . $exm->getPatient()->getId() . 
-                        "', '" . $exm->getLab() ->getId() .
-                        "', '" . $exm->getType() . "')"; 
+                        "', '" . $exm->getDate() . 
+                        "', '" . $exm->getType() . 
                         "', '" . $exm->getResult() . "')";
+    
     if($connection->query($sql) === TRUE) {
         return $exm;
     } else {
@@ -130,18 +136,16 @@ function writeExam($id, $data) {
     
     if(gettype($exm) == "object") {
         $exm->setDate($data["Date"]);
-        $exm->setDoctor(mountDoc($data["DoctorID"]));
         $exm->setPatient(mountPat($data["PatientID"]));
         $exm->setLab(mountLab($data["LabID"]));
-        $exm->setType($data["Type"]);
+        $exm->setType($data["ExamType"]);
         $exm->setResult($data["Result"]);
 
         global $connection;
         $sql = "UPDATE exam SET Date = '" . $exm->getDate() . 
-               "', DoctorID = '" . $exm->getDoctor()->getId() . 
                "', PatientID = '" . $exm->getPatient()->getId() .
                "', LabID = '" . $exm->getLab()->getId() .
-               "', Type = '" . $exm->getType() .
+               "', ExamType = '" . $exm->getType() .
                "', Result = '" . $exm->getResult() . 
                "' WHERE ExamID = " . ((string) $id);
         if($connection->query($sql) === TRUE) {

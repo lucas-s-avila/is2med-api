@@ -10,7 +10,7 @@ class Exam implements JsonSerializable {
     private $type;
     private $result;
 
-    function __construct($id, $date, $lab, $patient, $type, $result) {
+    function __construct($id, $date, $patient, $lab, $type, $result) {
         $this->id = $id;
         $this->date = $date;
         $this->lab = $lab;

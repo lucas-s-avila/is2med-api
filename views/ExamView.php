@@ -10,13 +10,13 @@ switch($request_method) {
             $id=$_GET["id"];
             getExam($id);
         }
-        elseif (!empty($_GET["lab"])) {
-            $lab=$_GET["lab"];
-            getExamLab($lab);
-        }
-        elseif (!empty($_GET["pacient"])) {
-            $pacient=$_GET["pacient"];
-            getExamPacient($pacient);
+        elseif (!empty($_GET["date"]) or !empty($_GET["labid"]) or !empty($_GET["examtype"]) or !empty($_GET["patientid"])) {
+            foreach($_GET as $field => $value) {
+                if(!empty($value)) {
+                    $search[$field] = $value;
+                }
+            }
+            searchExm($search);
         }
         else {
             getExams();
@@ -34,19 +34,10 @@ switch($request_method) {
             header("HTTP/1.0 405 Method Not Allowed");
         }
         break;
-    case 'PATCH':
-        if(!empty($_GET["id"])) {
-            $id=$_GET["id"];
-            updateAttributeExam($id);
-        }
-        else {
-            header("HTTP/1.0 405 Method Not Allowed");
-        }
-        break;
+
     case 'DELETE':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
-            deleteExam($id);
         }
         else {
             header("HTTP/1.0 405 Method Not Allowed");
@@ -58,33 +49,19 @@ switch($request_method) {
 }
 
 function getExams() {
-    $exams = loadExams();
+    $exams = loadExms();
     header('Content-Type: application/json');
     echo json_encode($exams);
 }
 
-function getExamLab($lab) {
-    $exams = loadLabExam((string) $lab);
-    if (gettype($exams) == "array") {
-        header("Content-Type: application/json");
-        echo json_encode($exams);
-    } else {
-        header("HTTP/1.0 404 Not Found");
-    }
-}
-
-function getExamPacient($pacient) {
-    $exams = loadPacExam((string) $pacient);
-    if (gettype($exams) == "array") {
-        header("Content-Type: application/json");
-        echo json_encode($exams);
-    } else {
-        header("HTTP/1.0 404 Not Found");
-    }
+function searchExms($search) {
+    $exms = loadExmsSearch($search);
+    header("Content-Type: application/json");
+    echo json_encode($exms);
 }
 
 function getExam($id) {
-    $exam = loadExam($id);
+    $exam = loadExm($id);
     if (gettype($exam) == "object") {
         header("Content-Type: application/json");
         echo json_encode($exam);
@@ -112,22 +89,15 @@ function updateExam($id) {
         header("HTTP/1.0 200 OK");
         header("Content-Type: application/json");
         echo json_encode($response);
-    } else {
-        header($response);
-    }
-}
-
-function updateAttributeExam($id) {
-    $data = json_decode(file_get_contents('php://input'), true);
-    $response = writeAttributeExam($id,$data);
-    if (gettype($response) == "object") {
-        header("HTTP/1.0 200 OK");
+    } else if (gettype($response) == "array"){
+        header("HTTP/1.0 400 Bad Request");
         header("Content-Type: application/json");
         echo json_encode($response);
     } else {
         header($response);
     }
 }
+
 
 function deleteExam($id) {
     $response = removeExam($id);

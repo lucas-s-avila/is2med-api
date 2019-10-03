@@ -25,15 +25,15 @@ DROP TABLE IF EXISTS `Appointment`;
 CREATE TABLE `Appointment` (
   `ApointmentID` int(11) NOT NULL,
   `DoctorID` int(11) DEFAULT NULL,
-  `PacientID` int(11) DEFAULT NULL,
+  `PatientID` int(11) DEFAULT NULL,
   `Date` varchar(11) DEFAULT NULL,
   `Prescription` varchar(100) DEFAULT NULL,
   `Notes` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`ApointmentID`),
   KEY `DoctorID` (`DoctorID`),
-  KEY `PacientID` (`PacientID`),
+  KEY `PatientID` (`PatientID`),
   CONSTRAINT `Appointment_ibfk_1` FOREIGN KEY (`DoctorID`) REFERENCES `Doctor` (`DoctorID`),
-  CONSTRAINT `Appointment_ibfk_2` FOREIGN KEY (`PacientID`) REFERENCES `Pacient` (`PacientID`)
+  CONSTRAINT `Appointment_ibfk_2` FOREIGN KEY (`PatientID`) REFERENCES `Patient` (`PatientID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -89,15 +89,15 @@ DROP TABLE IF EXISTS `Exam`;
 CREATE TABLE `Exam` (
   `ExamID` int(11) NOT NULL,
   `LabID` int(11) DEFAULT NULL,
-  `PacientID` int(11) DEFAULT NULL,
+  `PatientID` int(11) DEFAULT NULL,
   `Date` varchar(11) DEFAULT NULL,
   `ExamType` varchar(50) DEFAULT NULL,
   `Result` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`ExamID`),
   KEY `LabID` (`LabID`),
-  KEY `PacientID` (`PacientID`),
+  KEY `PatientID` (`PatientID`),
   CONSTRAINT `Exam_ibfk_1` FOREIGN KEY (`LabID`) REFERENCES `Lab` (`LabID`),
-  CONSTRAINT `Exam_ibfk_2` FOREIGN KEY (`PacientID`) REFERENCES `Pacient` (`PacientID`)
+  CONSTRAINT `Exam_ibfk_2` FOREIGN KEY (`PatientID`) REFERENCES `Patient` (`PatientID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -143,14 +143,14 @@ LOCK TABLES `Lab` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Pacient`
+-- Table structure for table `Patient`
 --
 
-DROP TABLE IF EXISTS `Pacient`;
+DROP TABLE IF EXISTS `Patient`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Pacient` (
-  `PacientID` int(11) NOT NULL,
+CREATE TABLE `Patient` (
+  `PatientID` int(11) NOT NULL,
   `Name` varchar(50) DEFAULT NULL,
   `Address` varchar(100) DEFAULT NULL,
   `Phone` varchar(11) DEFAULT NULL,
@@ -158,7 +158,7 @@ CREATE TABLE `Pacient` (
   `Gender` varchar(20) DEFAULT NULL,
   `Birthday` varchar(11) DEFAULT NULL,
   `CPF` varchar(11) DEFAULT NULL,
-  PRIMARY KEY (`PacientID`),
+  PRIMARY KEY (`PatientID`),
   UNIQUE KEY `Name` (`Name`),
   UNIQUE KEY `Email` (`Email`),
   UNIQUE KEY `CPF` (`CPF`),
@@ -167,12 +167,12 @@ CREATE TABLE `Pacient` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Pacient`
+-- Dumping data for table `Patient`
 --
 
-LOCK TABLES `Pacient` WRITE;
-/*!40000 ALTER TABLE `Pacient` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Pacient` ENABLE KEYS */;
+LOCK TABLES `Patient` WRITE;
+/*!40000 ALTER TABLE `Patient` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Patient` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

@@ -62,7 +62,7 @@ function searchPats($search) {
 }
 
 function getPatient($id) {
-    $pat = loadPatient($id);
+    $pat = loadPat($id);
     if (gettype($pat) == "object") {
         header("Content-Type: application/json");
         echo json_encode($pat);
@@ -73,7 +73,7 @@ function getPatient($id) {
 
 function insertPatient() {
     $data = json_decode(file_get_contents('php://input'), true);
-    $response = writeNewPacient($data);
+    $response = writeNewPatient($data);
     if (gettype($response) == "object") {
         header("HTTP/1.0 201 Created");
         header("Content-Type: application/json");
@@ -100,7 +100,7 @@ function updatePatient($id) {
 }
 
 function deletePatient($id) {
-    $response = removePacient($id);
+    $response = removePatient($id);
     header($response);
 }
 

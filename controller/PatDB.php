@@ -10,6 +10,7 @@ function mountPat($row) {
                       $row["Address"],
                       $row["Phone"],
                       $row["Email"],
+                      $row["Gender"],
                       $row["Birthday"],
                       $row["CPF"]);
     return $pat;
@@ -85,12 +86,13 @@ function writeNewPatient($data) {
 
     global $connection;
 
-    $sql = "INSERT INTO Patient (PatientID, Name, Address, Phone, Email, Birthday, CPF) 
+    $sql = "INSERT INTO Patient (PatientID, Name, Address, Phone, Email, Gender, Birthday, CPF) 
                         VALUES (" . $pat->getId() .
                         ", '" . $pat->getName() . 
                         "', '" . $pat->getAddress() .
                         "', '" . $pat->getPhone() . 
                         "', '" . $pat->getEmail() . 
+                        "', '" . $pat->getGender() . 
                         "', '" . $pat->getBirthday() . 
                         "', '" . $pat->getCpf() . "')";
     if($connection->query($sql) === TRUE) {
@@ -109,6 +111,7 @@ function writePatient($id, $data) {
         $pat->setAddress($data["Address"]);
         $pat->setPhone($data["Phone"]);
         $pat->setEmail($data["Email"]);
+        $pat->setGender($data["Gender"]);
         $pat->setBirthday($data["Birthday"]);
         $pat->setCpf($data["CPF"]);
 
@@ -117,8 +120,9 @@ function writePatient($id, $data) {
                "', Address = '" . $pat->getAddress() . 
                "', Phone = '" . $pat->getPhone() .
                "', Email = '" . $pat->getEmail() .
-               "', Specialty = '" . $pat->getSpecialty() . 
-               "', CRM = '" . $pat->getCRM() .
+               "', Gender = '" . $pat->getGender() . 
+               "', Birthday = '" . $pat->getBirthday() . 
+               "', CPF = '" . $pat->getCPF() .
                "' WHERE PatientID = " . ((string) $id);
         if($connection->query($sql) === TRUE) {
             return $pat;

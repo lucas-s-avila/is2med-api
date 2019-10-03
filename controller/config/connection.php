@@ -2,9 +2,9 @@
 Class dbObj{
 	/* Database connection start */
 	private $servername = "localhost";
-	private $username = "root";
-	private $password = "6102t0bgruf";
-	private $dbname = "is2med_db";
+	private $username = "Usuario";
+	private $password = "is2med";
+	private $dbname = "is2med";
 	public $conn;
 
 	function getConn() {
