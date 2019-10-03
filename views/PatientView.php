@@ -1,6 +1,6 @@
 <?php
 
-require_once("../controller/PacXML.php");
+require_once("../controller/PatDB.php");
 
 $request_method=$_SERVER["REQUEST_METHOD"];
 
@@ -8,41 +8,37 @@ switch($request_method) {
     case 'GET':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
-            getPacient($id);
+            getPatient($id);
         }
         elseif (!empty($_GET["name"])) {
-            $name=$_GET["name"];
-            getPacientName($name);
+            foreach($_GET as $field => $value) {
+                if(!empty($value)) {
+                    $search[$field] = $value;
+                }
+            }
+            searchPats($search);
         }
         else {
-            getPacients();
+            getPatients();
         }
         break;
     case 'POST':
-        insertPacient();
+        insertPatient();
         break;
     case 'PUT':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
-            updatePacient($id);
+            updatePatient($id);
         }
         else {
             header("HTTP/1.0 405 Method Not Allowed");
         }
         break;
-    case 'PATCH':
-        if(!empty($_GET["id"])) {
-            $id=$_GET["id"];
-            updateAttributePac($id);
-        }
-        else {
-            header("HTTP/1.0 405 Method Not Allowed");
-        }
-        break;
+
     case 'DELETE':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
-            deletePacient($id);
+            deletePatient($id);
         }
         else {
             header("HTTP/1.0 405 Method Not Allowed");
@@ -53,33 +49,29 @@ switch($request_method) {
         break;
 }
 
-function getPacients() {
-    $pacients = loadPacs();
+function getPatients() {
+    $patients = loadPats();
     header('Content-Type: application/json');
-    echo json_encode($pacients);
+    echo json_encode($patients);
 }
 
-function getPacientName($name) {
-    $pac = loadPacName((string) $name);
-    if (gettype($pac) == "array") {
+function searchPats($search) {
+    $pats = loadPatSearch($search);
+    header("Content-Type: application/json");
+    echo json_encode($pats);
+}
+
+function getPatient($id) {
+    $pat = loadPatient($id);
+    if (gettype($pat) == "object") {
         header("Content-Type: application/json");
-        echo json_encode($pac);
+        echo json_encode($pat);
     } else {
         header("HTTP/1.0 404 Not Found");
     }
 }
 
-function getPacient($id) {
-    $pac = loadPacient($id);
-    if (gettype($pac) == "object") {
-        header("Content-Type: application/json");
-        echo json_encode($pac);
-    } else {
-        header("HTTP/1.0 404 Not Found");
-    }
-}
-
-function insertPacient() {
+function insertPatient() {
     $data = json_decode(file_get_contents('php://input'), true);
     $response = writeNewPacient($data);
     if (gettype($response) == "object") {
@@ -91,11 +83,15 @@ function insertPacient() {
     }
 }
 
-function updatePacient($id) {
+function updatePatient($id) {
     $data = json_decode(file_get_contents('php://input'), true);
-    $response = writePacient($id,$data);
+    $response = writePatient($id,$data);
     if (gettype($response) == "object") {
         header("HTTP/1.0 200 OK");
+        header("Content-Type: application/json");
+        echo json_encode($response);
+    } else if (gettype($response) == "array"){
+        header("HTTP/1.0 400 Bad Request");
         header("Content-Type: application/json");
         echo json_encode($response);
     } else {
@@ -103,19 +99,7 @@ function updatePacient($id) {
     }
 }
 
-function updateAttributePac($id) {
-    $data = json_decode(file_get_contents('php://input'), true);
-    $response = writeAttributePac($id,$data);
-    if (gettype($response) == "object") {
-        header("HTTP/1.0 200 OK");
-        header("Content-Type: application/json");
-        echo json_encode($response);
-    } else {
-        header($response);
-    }
-}
-
-function deletePacient($id) {
+function deletePatient($id) {
     $response = removePacient($id);
     header($response);
 }

@@ -1,20 +1,20 @@
 <?php
 require_once("Doctor.php");
-require_once("Pacient.php");
+require_once("Patient.php");
 
 class Exam implements JsonSerializable {
     private $id;
     private $date;
     private $lab;
-    private $pacient;
+    private $patient;
     private $type;
     private $result;
 
-    function __construct($id, $date, $lab, $pacient, $type, $result) {
+    function __construct($id, $date, $lab, $patient, $type, $result) {
         $this->id = $id;
         $this->date = $date;
         $this->lab = $lab;
-        $this->pacient = $pacient;
+        $this->patient = $patient;
         $this->type = $type;
         $this->result = $result;
     }
@@ -39,12 +39,12 @@ class Exam implements JsonSerializable {
         $this->lab = $lab;
     }
 
-    function getPacient() {
-        return $this->pacient;
+    function getPatient() {
+        return $this->patient;
     }
 
-    function setPacient($pacient) {
-        $this->pacient = $pacient;
+    function setPatient($patient) {
+        $this->patient = $patient;
     }
 
     function getType() {
@@ -68,7 +68,7 @@ class Exam implements JsonSerializable {
             "id" => $this->getId(),
             "date" => $this->getDate(),
             "lab" => $this->getLab(),
-            "pacient" => $this->getPacient(),
+            "patient" => $this->getPatient(),
             "type" => $this->getType(),
             "result" => $this->getResult()            
         );
