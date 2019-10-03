@@ -35,7 +35,6 @@ switch($request_method) {
             header("HTTP/1.0 405 Method Not Allowed");
         }
         break;
-
     case 'DELETE':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
@@ -57,7 +56,7 @@ function getLabs() {
 }
 
 function searchLabs($search) {
-    $docs = loadLabSearch($search);
+    $labs = loadLabSearch($search);
     header("Content-Type: application/json");
     echo json_encode($labs);
 }

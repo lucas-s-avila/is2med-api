@@ -1,6 +1,6 @@
 <?php
 
-require_once("../controller/AppXML.php");
+require_once("../controller/AppDB.php");
 
 $request_method=$_SERVER["REQUEST_METHOD"];
 
@@ -55,7 +55,7 @@ function getAppoints() {
 }
 
 function searchApps($search) {
-    $apps = loadDocSearch($search);
+    $apps = loadAppSearch($search);
     header("Content-Type: application/json");
     echo json_encode($apps);
 }
@@ -72,7 +72,7 @@ function getAppoint($id) {
 
 function insertAppoint() {
     $data = json_decode(file_get_contents('php://input'), true);
-    $response = writeNewAppoint($data);
+    $response = writeNewAppointment($data);
     if (gettype($response) == "object") {
         header("HTTP/1.0 201 Created");
         header("Content-Type: application/json");
@@ -84,7 +84,7 @@ function insertAppoint() {
 
 function updateAppoint($id) {
     $data = json_decode(file_get_contents('php://input'), true);
-    $response = writeAppoint($id,$data);
+    $response = writeAppointment($id,$data);
     if (gettype($response) == "object") {
         header("HTTP/1.0 200 OK");
         header("Content-Type: application/json");
@@ -99,7 +99,7 @@ function updateAppoint($id) {
 }
 
 function deleteAppoint($id) {
-    $response = removeAppoint($id);
+    $response = removeAppointment($id);
     header($response);
 }
 

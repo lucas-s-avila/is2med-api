@@ -23,13 +23,13 @@ DROP TABLE IF EXISTS `Appointment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Appointment` (
-  `ApointmentID` int(11) NOT NULL,
+  `AppointmentID` int(11) NOT NULL,
   `DoctorID` int(11) DEFAULT NULL,
   `PatientID` int(11) DEFAULT NULL,
   `Date` varchar(11) DEFAULT NULL,
   `Prescription` varchar(100) DEFAULT NULL,
   `Notes` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`ApointmentID`),
+  PRIMARY KEY (`AppointmentID`),
   KEY `DoctorID` (`DoctorID`),
   KEY `PatientID` (`PatientID`),
   CONSTRAINT `Appointment_ibfk_1` FOREIGN KEY (`DoctorID`) REFERENCES `Doctor` (`DoctorID`),

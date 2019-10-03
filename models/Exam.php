@@ -65,12 +65,12 @@ class Exam implements JsonSerializable {
 
     public function jsonSerialize() {
         return array(
-            "id" => $this->getId(),
-            "date" => $this->getDate(),
-            "lab" => $this->getLab(),
-            "patient" => $this->getPatient(),
-            "type" => $this->getType(),
-            "result" => $this->getResult()            
+            "ID" => $this->getId(),
+            "Date" => $this->getDate(),
+            "Lab" => $this->getLab(),
+            "Patient" => $this->getPatient(),
+            "ExamType" => $this->getType(),
+            "Result" => $this->getResult()            
         );
     }
 }

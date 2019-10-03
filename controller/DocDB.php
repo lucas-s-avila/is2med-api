@@ -107,7 +107,7 @@ function writeNewDoctor($data) {
     if($connection->query($sql) === TRUE) {
         return $doc;
     } else {
-        $response["Error"] = $connection->error;
+        $response["message"] = $connection->error;
         return $response;
     }
 }
@@ -134,7 +134,7 @@ function writeDoctor($id, $data) {
         if($connection->query($sql) === TRUE) {
             return $doc;
         } else {
-            $response["Error"] = $connection->error;
+            $response["message"] = $connection->error;
             return $response;
         }
     } else {

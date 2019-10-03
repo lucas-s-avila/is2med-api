@@ -45,7 +45,7 @@ function loadExms() {
     return $exams;
 }
 
-function loadExmSearch($search) {   //date, exam type, labID, patientID
+function loadExmsSearch($search) {   //date, exam type, labID, patientID
     global $connection;
 
     $sql = "SELECT * FROM Exam WHERE ";
@@ -126,7 +126,7 @@ function writeNewExam($data) {
     if($connection->query($sql) === TRUE) {
         return $exm;
     } else {
-        $response["Error"] = $connection->error;
+        $response["message"] = $connection->error;
         return $response;
     }
 }
@@ -142,7 +142,7 @@ function writeExam($id, $data) {
         $exm->setResult($data["Result"]);
 
         global $connection;
-        $sql = "UPDATE exam SET Date = '" . $exm->getDate() . 
+        $sql = "UPDATE Exam SET Date = '" . $exm->getDate() . 
                "', PatientID = '" . $exm->getPatient()->getId() .
                "', LabID = '" . $exm->getLab()->getId() .
                "', ExamType = '" . $exm->getType() .
@@ -151,7 +151,7 @@ function writeExam($id, $data) {
         if($connection->query($sql) === TRUE) {
             return $exm;
         } else {
-            $response["Error"] = $connection->error;
+            $response["message"] = $connection->error;
             return $response;
         }
     } else {
@@ -162,7 +162,7 @@ function writeExam($id, $data) {
 function removeExam($id) {
     global $connection;
 
-    $sql = "DELETE FROM exam WHERE ExamID = " . ((string) $id);
+    $sql = "DELETE FROM Exam WHERE ExamID = " . ((string) $id);
 
     if($connection->query($sql) === TRUE) {
         return "HTTP/1.0 200 OK";

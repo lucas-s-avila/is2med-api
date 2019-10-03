@@ -29,8 +29,8 @@ class Doctor extends BasicInfo {
 
     public function jsonSerialize() {
         $array = parent::jsonSerialize();
-        $array['specialty'] = $this->getSpecialty();
-        $array['crm'] = $this->getCrm();
+        $array['Specialty'] = $this->getSpecialty();
+        $array['CRM'] = $this->getCrm();
         return $array;
     }
 

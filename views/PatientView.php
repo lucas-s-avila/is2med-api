@@ -79,7 +79,8 @@ function insertPatient() {
         header("Content-Type: application/json");
         echo json_encode($response);
     } else {
-        header($response);
+        header("HTTP/1.0 400 Bad Request");
+        echo json_encode($response);
     }
 }
 

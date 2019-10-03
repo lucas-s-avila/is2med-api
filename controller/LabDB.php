@@ -38,14 +38,7 @@ function loadLabSearch($search) {
     global $connection;
 
     $sql = "SELECT * FROM Lab WHERE ";
-    
-    if(!is_null($search["name"])) {
-        $sql = $sql . " Name LIKE '%" . $search["name"] . "%'";
-        if(count($search) > 1) {
-            $sql = $sql . " AND ";
-        }
-        unset($search["name"]);
-    }
+    $sql = $sql . "Name LIKE '%" . $search["name"] . "%'";
 
     $result = $connection->query($sql);
 
@@ -96,7 +89,7 @@ function writeNewLab($data) {
     if($connection->query($sql) === TRUE) {
         return $lab;
     } else {
-        $response["Error"] = $connection->error;
+        $response["message"] = $connection->error;
         return $response;
     }
 }
@@ -117,15 +110,27 @@ function writeLab($id, $data) {
                "', Address = '" . $lab->getAddress() . 
                "', Phone = '" . $lab->getPhone() .
                "', Email = '" . $lab->getEmail() .
-               "', Specialty = '" . $lab->getSpecialty() . 
-               "', CRM = '" . $lab->getCRM() .
+               "', ExamType = '" . $lab->getExamType() . 
+               "', CNPJ = '" . $lab->getCNPJ() .
                "' WHERE LabID = " . ((string) $id);
         if($connection->query($sql) === TRUE) {
             return $lab;
         } else {
-            $response["Error"] = $connection->error;
+            $response["message"] = $connection->error;
             return $response;
         }
+    } else {
+        return "HTTP/1.0 404 Not Found";
+    }
+}
+
+function removeLab($id) {
+    global $connection;
+
+    $sql = "DELETE FROM Lab WHERE LabID = " . ((string) $id);
+
+    if($connection->query($sql) === TRUE) {
+        return "HTTP/1.0 200 OK";
     } else {
         return "HTTP/1.0 404 Not Found";
     }

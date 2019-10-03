@@ -98,7 +98,7 @@ function writeNewPatient($data) {
     if($connection->query($sql) === TRUE) {
         return $pat;
     } else {
-        $response["Error"] = $connection->error;
+        $response["message"] = $connection->error;
         return $response;
     }
 }
@@ -127,9 +127,21 @@ function writePatient($id, $data) {
         if($connection->query($sql) === TRUE) {
             return $pat;
         } else {
-            $response["Error"] = $connection->error;
+            $response["message"] = $connection->error;
             return $response;
         }
+    } else {
+        return "HTTP/1.0 404 Not Found";
+    }
+}
+
+function removePatient($id) {
+    global $connection;
+
+    $sql = "DELETE FROM Patient WHERE PatientID = " . ((string) $id);
+
+    if($connection->query($sql) === TRUE) {
+        return "HTTP/1.0 200 OK";
     } else {
         return "HTTP/1.0 404 Not Found";
     }

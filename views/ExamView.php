@@ -16,7 +16,7 @@ switch($request_method) {
                     $search[$field] = $value;
                 }
             }
-            searchExm($search);
+            searchExms($search);
         }
         else {
             getExams();
@@ -38,6 +38,7 @@ switch($request_method) {
     case 'DELETE':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
+            deleteExam($id);
         }
         else {
             header("HTTP/1.0 405 Method Not Allowed");

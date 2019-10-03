@@ -9,10 +9,18 @@ $db = new dbObj();
 $connection =  $db->getConn();
 
 function mountApp($row) {
+    $patient = loadPat($row["PatientID"]);
+    $doc = loadDoc($row["DoctorID"]);
+
+    if(is_null($patient) or is_null($doc)) {
+        header("HTTP/1.0 404 Not Found");
+        exit();
+    }
+
     $app = new Appointment($row["AppointmentID"],
                            $row["Date"],
-                           loadDoc($row["DoctorID"]),
-                           loadPatient($row["PatientID"]),
+                           $doc,
+                           $patient,
                            $row["Prescription"],
                            $row["Notes"]);
     return $app;
@@ -91,7 +99,7 @@ function loadApp($id) {
     }
 }
 
-function writeNewappointment($data) {
+function writeNewAppointment($data) {
     $id = time();
     $data["AppointmentID"] = $id;
 
@@ -99,17 +107,18 @@ function writeNewappointment($data) {
 
     global $connection;
 
-    $sql = "INSERT INTO Appointment (AppointmentID, Date, DoctorID, PatientID, Prescription, Notes) 
+    $sql = "INSERT INTO Appointment (AppointmentID, DoctorID, PatientID, Date, Prescription, Notes) 
                         VALUES (" . $app->getId() .
-                        ", '" . $app->getDate() . 
-                        "', '" . $app->getDoctor()->getId() .
-                        "', '" . $app->getPatient()->getId() . 
+                        ", '" . $app->getDoctor()->getId() .
+                        "', '" . $app->getPatient()->getId() .
+                        "', '" . $app->getDate() . 
                         "', '" . $app->getPrescription() . 
                         "', '" . $app->getNotes() . "')";
+
     if($connection->query($sql) === TRUE) {
         return $app;
     } else {
-        $response["Error"] = $connection->error;
+        $response["message"] = $connection->error;
         return $response;
     }
 }
@@ -125,16 +134,16 @@ function writeAppointment($id, $data) {
         $app->setNotes($data["Notes"]);
 
         global $connection;
-        $sql = "UPDATE appointment SET Date = '" . $app->getDate() . 
+        $sql = "UPDATE Appointment SET Date = '" . $app->getDate() . 
                "', DoctorID = '" . $app->getDoctor()->getId() . 
                "', PatientID = '" . $app->getPatient()->getId() .
-               "', Prescription = '" . $app->getPrescrption() .
+               "', Prescription = '" . $app->getPrescription() .
                "', Notes = '" . $app->getNotes() . 
                "' WHERE AppointmentID = " . ((string) $id);
         if($connection->query($sql) === TRUE) {
             return $app;
         } else {
-            $response["Error"] = $connection->error;
+            $response["message"] = $connection->error;
             return $response;
         }
     } else {
@@ -145,11 +154,12 @@ function writeAppointment($id, $data) {
 function removeAppointment($id) {
     global $connection;
 
-    $sql = "DELETE FROM appointment WHERE AppointmentID = " . ((string) $id);
+    $sql = "DELETE FROM Appointment WHERE AppointmentID = " . ((string) $id);
 
     if($connection->query($sql) === TRUE) {
         return "HTTP/1.0 200 OK";
     } else {
+        echo($connection->error);
         return "HTTP/1.0 404 Not Found";
     }
 }
