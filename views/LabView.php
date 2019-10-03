@@ -1,6 +1,6 @@
 <?php
 
-require_once("../controller/LabXML.php");
+require_once("../controller/LabDB.php");
 
 $request_method=$_SERVER["REQUEST_METHOD"];
 
@@ -11,13 +11,18 @@ switch($request_method) {
             getLab($id);
         }
         elseif (!empty($_GET["name"])) {
-            $name=$_GET["name"];
-            getLabName($name);
+            foreach($_GET as $field => $value) {
+                if(!empty($value)) {
+                    $search[$field] = $value;
+                }
+            }
+            searchLabs($search);
         }
         else {
             getLabs();
         }
         break;
+
     case 'POST':
         insertLab();
         break;
@@ -30,15 +35,7 @@ switch($request_method) {
             header("HTTP/1.0 405 Method Not Allowed");
         }
         break;
-    case 'PATCH':
-        if(!empty($_GET["id"])) {
-            $id=$_GET["id"];
-            updateAttributeLab($id);
-        }
-        else {
-            header("HTTP/1.0 405 Method Not Allowed");
-        }
-        break;
+
     case 'DELETE':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
@@ -59,14 +56,10 @@ function getLabs() {
     echo json_encode($labs);
 }
 
-function getLabName($name) {
-    $labs = loadLabName((string) $name);
-    if (gettype($labs) == "array") {
-        header("Content-Type: application/json");
-        echo json_encode($labs);
-    } else {
-        header("HTTP/1.0 404 Not Found");
-    }
+function searchLabs($search) {
+    $docs = loadLabSearch($search);
+    header("Content-Type: application/json");
+    echo json_encode($labs);
 }
 
 function getLab($id) {
@@ -88,26 +81,19 @@ function insertLab() {
         echo json_encode($response);
     } else {
         header($response);
+        echo json_encode($response);
     }
 }
+
 
 function updateLab($id) {
     $data = json_decode(file_get_contents('php://input'), true);
     $response = writeLab($id,$data);
     if (gettype($response) == "object") {
         header("HTTP/1.0 200 OK");
-        header("Content-Type: application/json");
         echo json_encode($response);
-    } else {
-        header($response);
-    }
-}
-
-function updateAttributeLab($id) {
-    $data = json_decode(file_get_contents('php://input'), true);
-    $response = writeAttributeLab($id,$data);
-    if (gettype($response) == "object") {
-        header("HTTP/1.0 200 OK");
+    } else if (gettype($response) == "array"){
+        header("HTTP/1.0 400 Bad Request");
         header("Content-Type: application/json");
         echo json_encode($response);
     } else {

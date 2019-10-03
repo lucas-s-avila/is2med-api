@@ -3,7 +3,7 @@
 require_once("../models/Appointment.php");
 require_once("config/connection.php");
 require_once("DocDB.php");
-require_once("PatientDB.php");
+require_once("PatDB.php");
 
 $db = new dbObj();
 $connection =  $db->getConn();
@@ -37,7 +37,7 @@ function loadApps() {
     return $appoints;
 }
 
-function loadDocSearch($search) {
+function loadAppSearch($search) {
     global $connection;
 
     $sql = "SELECT * FROM Appointment WHERE ";
@@ -120,7 +120,7 @@ function writeAppointment($id, $data) {
     if(gettype($app) == "object") {
         $app->setDate($data["Date"]);
         $app->setDoctor(mountDoc($data["DoctorID"]));
-        $app->setPatient(mountPatient($data["PatientID"]));
+        $app->setPatient(mountPat($data["PatientID"]));
         $app->setPrescription($data["Prescription"]);
         $app->setNotes($data["Notes"]);
 
@@ -130,7 +130,7 @@ function writeAppointment($id, $data) {
                "', PatientID = '" . $app->getPatient()->getId() .
                "', Prescription = '" . $app->getPrescrption() .
                "', Notes = '" . $app->getNotes() . 
-               "' WHERE ApoointmentID = " . ((string) $id);
+               "' WHERE AppointmentID = " . ((string) $id);
         if($connection->query($sql) === TRUE) {
             return $app;
         } else {

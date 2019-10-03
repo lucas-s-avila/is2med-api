@@ -1,6 +1,6 @@
 <?php
 require_once("Doctor.php");
-require_once("Pacient.php");
+require_once("Patient.php");
 
 class Appointment implements JsonSerializable {
     private $id;
@@ -14,7 +14,7 @@ class Appointment implements JsonSerializable {
         $this->id = $id;
         $this->date = $date;
         $this->doctor = $doctor;
-        $this->pacient = $patient;
+        $this->patient = $patient;
         $this->prescription = $prescription;
         $this->notes = $notes;
     }

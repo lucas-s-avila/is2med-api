@@ -1,6 +1,6 @@
 <?php
 
-require_once("../controller/ExamXML.php");
+require_once("../controller/ExamDB.php");
 
 $request_method=$_SERVER["REQUEST_METHOD"];
 
