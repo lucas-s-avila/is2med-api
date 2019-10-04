@@ -1,18 +1,35 @@
 <?php
 
 require_once("../models/User.php");
+require_once("config/connection.php");
+$db = new dbObj();
+$connection =  $db->getConn();
+
+function mountUser($row) {
+    $user = new User($row["UserID"],
+                     $row["Username"],
+                     $row["Password"],
+                     $row["ProfileID"],
+                     $row["Group"]);
+    return $user;
+}
 
 function loadUsers() {
-    $xmlusers = simplexml_load_file("../xml/users.xml");
+    global $connection;
+
+    $sql = "SELECT * FROM User";
+    $result = $connection->query($sql);
+
     $users = array();
-    foreach($xmlusers as $user) {
-        $users[] = new User((string) $user->id, 
-                            (string) $user->username, 
-                            (string) $user->password, 
-                            (string) $user->profileId, 
-                            (string) $user->group);
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_array()) {
+            $user = mountUser($row);
+            $users[] = $user;
+        }
+        return $users;
+    } else {
+        return null;
     }
-    return $users;
 }
 
 function loadUser($id) {
