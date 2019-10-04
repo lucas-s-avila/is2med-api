@@ -22,7 +22,6 @@ switch($request_method) {
             getDoctors();
         }
         break;
-
     case 'POST':
         insertDoctor();
         break;

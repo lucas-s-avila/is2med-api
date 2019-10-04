@@ -3,25 +3,27 @@
 require_once("../controller/CountDB.php");
 
 $request_method=$_SERVER["REQUEST_METHOD"];
-$request = $_SERVER['REQUEST_URI'];
+$request = $_SERVER["REQUEST_URI"];
 
-echo($request); // Testar para conferir se o contém o /is2med-api/
+$request = parse_url($request);
+parse_str($request["query"], $query);
+$request = $request["path"];
 
 if($request_method == 'GET') {
     header("Content-Type: application/json");
     switch($request) {
-        case '/doctors':
+        case '/is2med-api/count/doctors':
             echo json_encode(countDocs());
             break;
-        case '/labs':
+        case '/is2med-api/count/labs':
             echo json_encode(countLabs());
             break;
-        case '/patients':
+        case '/is2med-api/count/patients':
             echo json_encode(countPats());
             break;
-        case '/appointments':
-            if(!empty($_GET["patientid"]) or !empty($_GET["doctorid"])) {
-                foreach($_GET as $field => $value) {
+        case '/is2med-api/count/appointments':
+            if(!empty($query["patientid"]) or !empty($query["doctorid"])) {
+                foreach($query as $field => $value) {
                     if(!empty($value)) {
                         $search[$field] = $value;
                     }
@@ -31,9 +33,9 @@ if($request_method == 'GET') {
                 echo json_encode(countApps());
             }
             break;
-        case '/exams':
-            if(!empty($_GET["patientid"]) or !empty($_GET["labid"])) {
-                foreach($_GET as $field => $value) {
+        case '/is2med-api/count/exams':
+            if(!empty($query["patientid"]) or !empty($query["labid"])) {
+                foreach($query as $field => $value) {
                     if(!empty($value)) {
                         $search[$field] = $value;
                     }
