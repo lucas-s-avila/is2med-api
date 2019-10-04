@@ -33,43 +33,63 @@ function loadUsers() {
 }
 
 function loadUser($id) {
-    $users = loadUsers();
-    foreach($users as $user) {
-        if($user->getId() == $id) {
-            return $user;
-        }
+    global $connection;
+    $sql = "SELECT * FROM User WHERE UserID = " . ((string) $id);
+    $result = $connection->query($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_array();
+        $user = mountUser($row);
+        return $user;
+    } else {
+        return null;
     }
-    return false;
 }
 
 function writeNewUser($data) {
     $id = time();
-    $user = new User((string) $id,
-                    (string) $data["username"], 
-                    (string) $data["password"], 
-                    (string) $data["profileId"], 
-                    (string) $data["group"]);
-    $xmlusers = simplexml_load_file("../xml/users.xml");
-    $userNode = $xmlusers->addChild("user");
-    
-    if(!array_key_exists("username", $data) || 
-        !array_key_exists("password", $data) ||
-        !array_key_exists("profileId", $data) || 
-        !array_key_exists("group", $data)) 
-    {
-        return "HTTP/1.0 400 Bad Request";
+    $data["UserID"] = $id;
+    $user = mountUser($data);
+    global $connection;
+    $sql = "INSERT INTO User (UserID, Username, Password, ProfileID, GroupName) 
+                        VALUES (" . $user->getId() .
+                        ", '" . $user->getUsername() . 
+                        "', '" . $user->getPassword() .
+                        "', '" . $doc->getProfileID() . 
+                        "', '" . $doc->getGroup() . "')";
+    if($connection->query($sql) === TRUE) {
+        return $user;
+    } else {
+        $response["message"] = $connection->error;
+        return $response;
     }
+}
 
-    $userNode->addChild("id", $user->getId());
-    $userNode->addChild("username", $user->getUsername());
-    $userNode->addChild("password", $user->getPassword());
-    $userNode->addChild("profileId", $user->getProfileId());
-    $userNode->addChild("group",  $user->getgroup());
-
-    $write = simplexml_import_dom($xmlusers);
-    $write->saveXML("../xml/users.xml");
-
-    return $user;
+function writeUser($id, $data) {
+    $user = loadUser($id);
+    
+    if(gettype($user) == "object") {
+        $user->setUsername($data["Username"]);
+        $user->setPassword($data["Password"]);
+        $user->setProfileID($data["ProfileID"]);
+        $user->setGroup($data["Group"]);
+        
+        global $connection;
+        $sql = "UPDATE User SET Username = '" . $user->getName() . 
+               "', Address = '" . $doc->getAddress() . 
+               "', Phone = '" . $doc->getPhone() .
+               "', Email = '" . $doc->getEmail() .
+               "', Specialty = '" . $doc->getSpecialty() . 
+               "', CRM = '" . $doc->getCRM() .
+               "' WHERE DoctorID = " . ((string) $id);
+        if($connection->query($sql) === TRUE) {
+            return $doc;
+        } else {
+            $response["message"] = $connection->error;
+            return $response;
+        }
+    } else {
+        return "HTTP/1.0 404 Not Found";
+    }
 }
 
 function writeUser($id, $data) {
