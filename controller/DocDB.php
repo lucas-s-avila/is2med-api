@@ -1,6 +1,7 @@
 <?php
 
 require_once("../models/Doctor.php");
+require_once("UserDB.php");
 require_once("config/connection.php");
 $db = new dbObj();
 $connection =  $db->getConn();
@@ -105,6 +106,13 @@ function writeNewDoctor($data) {
                         "', '" . $doc->getSpecialty() . 
                         "', '" . $doc->getCrm() . "')";
     if($connection->query($sql) === TRUE) {
+        $user = array(
+            "Username" => $doc->getName(),
+            "Password" => $doc->getCrm(),
+            "ProfileID" => $doc->getId(),
+            "Group" => "Doctor"
+        );
+        $user = writeNewUser($user);
         return $doc;
     } else {
         $response["message"] = $connection->error;

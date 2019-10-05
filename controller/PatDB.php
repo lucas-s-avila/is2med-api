@@ -1,5 +1,6 @@
 <?php
 require_once("../models/Patient.php");
+require_once("UserDB.php");
 require_once("config/connection.php");
 $db = new dbObj();
 $connection =  $db->getConn();
@@ -96,6 +97,13 @@ function writeNewPatient($data) {
                         "', '" . $pat->getBirthday() . 
                         "', '" . $pat->getCpf() . "')";
     if($connection->query($sql) === TRUE) {
+        $user = array(
+            "Username" => $pat->getName(),
+            "Password" => $pat->getCpf(),
+            "ProfileID" => $pat->getId(),
+            "Group" => "Patient"
+        );
+        $user = writeNewUser($user);
         return $pat;
     } else {
         $response["message"] = $connection->error;

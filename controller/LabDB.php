@@ -1,5 +1,6 @@
 <?php
 require_once("../models/Lab.php");
+require_once("UserDB.php");
 require_once("config/connection.php");
 $db = new dbObj();
 $connection =  $db->getConn();
@@ -87,6 +88,13 @@ function writeNewLab($data) {
                         "', '" . $lab->getExamType() . 
                         "', '" . $lab->getCnpj() . "')";
     if($connection->query($sql) === TRUE) {
+        $user = array(
+            "Username" => $lab->getName(),
+            "Password" => $lab->getCnpj(),
+            "ProfileID" => $lab->getId(),
+            "Group" => "Lab"
+        );
+        $user = writeNewUser($user);
         return $lab;
     } else {
         $response["message"] = $connection->error;
