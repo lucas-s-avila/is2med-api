@@ -26,15 +26,6 @@ switch($request_method) {
             header("HTTP/1.0 405 Method Not Allowed");
         }
         break;
-    case 'PATCH':
-        if(!empty($_GET["id"])) {
-            $id=$_GET["id"];
-            updateAttributeUser($id);
-        }
-        else {
-            header("HTTP/1.0 405 Method Not Allowed");
-        }
-        break;
     case 'DELETE':
         if(!empty($_GET["id"])) {
             $id=$_GET["id"];
@@ -84,16 +75,8 @@ function updateUser($id) {
         header("HTTP/1.0 200 OK");
         header("Content-Type: application/json");
         echo json_encode($response);
-    } else {
-        header($response);
-    }
-}
-
-function updateAttributeUser($id) {
-    $data = json_decode(file_get_contents('php://input'), true);
-    $response = writeAttributeUser($id,$data);
-    if (gettype($response) == "object") {
-        header("HTTP/1.0 200 OK");
+    } else if (gettype($response) == "array"){
+        header("HTTP/1.0 400 Bad Request");
         header("Content-Type: application/json");
         echo json_encode($response);
     } else {
