@@ -1,21 +1,13 @@
 <?php
 
 require_once("../models/User.php");
-
-function loadUsers() {
-    $xmlUsers = simplexml_load_file("../xml/users.xml");
-    $users = array();
-    foreach($xmlUsers->Children() as $user) {
-        $users[] = new User((string) $user->id, (string) $user->username, (string) $user->password, (string) $user->profileId, (string) $user->group);
-    }
-    return $users;
-}
+require_once("UserDB.php");
 
 function login($data) {
     $users = loadUsers();
     foreach($users as $user) {
-        if($user->getUsername() == $data["username"]) {
-            if($user->getPassword() == $data["password"]) {
+        if($user->getUsername() == $data["Username"]) {
+            if($user->getPassword() == $data["Password"]) {
                 return $user;
             }
         }

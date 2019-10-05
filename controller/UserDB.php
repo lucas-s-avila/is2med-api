@@ -10,7 +10,7 @@ function mountUser($row) {
                      $row["Username"],
                      $row["Password"],
                      $row["ProfileID"],
-                     $row["Group"]);
+                     $row["GroupName"]);
     return $user;
 }
 
@@ -71,13 +71,13 @@ function writeUser($id, $data) {
         $user->setUsername($data["Username"]);
         $user->setPassword($data["Password"]);
         $user->setProfileID($data["ProfileID"]);
-        $user->setGroup($data["Group"]);
+        $user->setGroup($data["GroupName"]);
         
         global $connection;
         $sql = "UPDATE User SET Username = '" . $user->getUsername() . 
                "', Password = '" . $user->getPassword() . 
                "', ProfileID = '" . $user->getProfileID() .
-               "', Group = '" . $user->getGroup() .
+               "', GroupName = '" . $user->getGroup() .
                "' WHERE UserID = " . ((string) $id);
         if($connection->query($sql) === TRUE) {
             return $user;

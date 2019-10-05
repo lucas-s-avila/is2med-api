@@ -57,7 +57,7 @@ class User implements JsonSerializable {
             "Username" => $this->getUsername(),
             "Password" => $this->getPassword(),
             "ProfileID" => $this->getProfileId(),
-            "Group" => $this->getGroup()
+            "GroupName" => $this->getGroup()
         );
     }
 }

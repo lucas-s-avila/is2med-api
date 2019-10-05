@@ -1,6 +1,6 @@
 <?php
 
-require_once("../controller/UserXML.php");
+require_once("../controller/UserDB.php");
 
 $request_method=$_SERVER["REQUEST_METHOD"];
 
