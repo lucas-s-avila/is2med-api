@@ -6,14 +6,14 @@ $db = new dbObj();
 $connection =  $db->getConn();
 
 function mountPat($row) {
-    $pat = new Patient($row["PatientID"],
-                      $row["Name"],
-                      $row["Address"],
-                      $row["Phone"],
-                      $row["Email"],
-                      $row["Gender"],
-                      $row["Birthday"],
-                      $row["CPF"]);
+    $pat = new Patient($row["id"],
+                      $row["name"],
+                      $row["address"],
+                      $row["phone"],
+                      $row["email"],
+                      $row["gender"],
+                      $row["birthday"],
+                      $row["cpf"]);
     return $pat;
 }
 
@@ -42,7 +42,7 @@ function loadPatSearch($search) {
     $sql = "SELECT * FROM Patient WHERE ";
     
     if(!is_null($search["name"])) {
-        $sql = $sql . " Name LIKE '%" . $search["name"] . "%'";
+        $sql = $sql . " name LIKE '%" . $search["name"] . "%'";
         if(count($search) > 1) {
             $sql = $sql . " AND ";
         }
@@ -67,7 +67,7 @@ function loadPatSearch($search) {
 function loadPat($id) {
     global $connection;
 
-    $sql = "SELECT * FROM Patient WHERE PatientID = " . ((string) $id);
+    $sql = "SELECT * FROM Patient WHERE id = " . ((string) $id);
     $result = $connection->query($sql);
 
     if ($result->num_rows > 0) {
@@ -81,14 +81,14 @@ function loadPat($id) {
 
 function writeNewPatient($data) {
     $id = time();
-    $data["PatientID"] = $id;
+    $data["id"] = $id;
 
     $pat = mountPat($data);
 
     global $connection;
 
-    $sql = "INSERT INTO Patient (PatientID, Name, Address, Phone, Email, Gender, Birthday, CPF) 
-                        VALUES (" . $pat->getId() .
+    $sql = "INSERT INTO Patient (id, name, address, phone, email, gender, birthday, cpf) 
+                        VALUES (" . ((string) $id) .
                         ", '" . $pat->getName() . 
                         "', '" . $pat->getAddress() .
                         "', '" . $pat->getPhone() . 
@@ -98,10 +98,10 @@ function writeNewPatient($data) {
                         "', '" . $pat->getCpf() . "')";
     if($connection->query($sql) === TRUE) {
         $user = array(
-            "Username" => $pat->getName(),
-            "Password" => $pat->getCpf(),
-            "ProfileID" => $pat->getId(),
-            "Group" => "Patient"
+            "username" => strtolower(explode(" ",$pat->getName())[0]),
+            "password" => $pat->getCpf(),
+            "profileId" => $id,
+            "groupName" => "patient"
         );
         $user = writeNewUser($user);
         return $pat;
@@ -115,23 +115,23 @@ function writePatient($id, $data) {
     $pat = loadPat($id);
     
     if(gettype($pat) == "object") {
-        $pat->setName($data["Name"]);
-        $pat->setAddress($data["Address"]);
-        $pat->setPhone($data["Phone"]);
-        $pat->setEmail($data["Email"]);
-        $pat->setGender($data["Gender"]);
-        $pat->setBirthday($data["Birthday"]);
-        $pat->setCpf($data["CPF"]);
+        $pat->setName($data["name"]);
+        $pat->setAddress($data["address"]);
+        $pat->setPhone($data["phone"]);
+        $pat->setEmail($data["email"]);
+        $pat->setGender($data["gender"]);
+        $pat->setBirthday($data["birthday"]);
+        $pat->setCpf($data["cpf"]);
 
         global $connection;
-        $sql = "UPDATE Patient SET Name = '" . $pat->getName() . 
-               "', Address = '" . $pat->getAddress() . 
-               "', Phone = '" . $pat->getPhone() .
-               "', Email = '" . $pat->getEmail() .
-               "', Gender = '" . $pat->getGender() . 
-               "', Birthday = '" . $pat->getBirthday() . 
-               "', CPF = '" . $pat->getCPF() .
-               "' WHERE PatientID = " . ((string) $id);
+        $sql = "UPDATE Patient SET name = '" . $pat->getName() . 
+               "', address = '" . $pat->getAddress() . 
+               "', phone = '" . $pat->getPhone() .
+               "', email = '" . $pat->getEmail() .
+               "', gender = '" . $pat->getGender() . 
+               "', birthday = '" . $pat->getBirthday() . 
+               "', cpf = '" . $pat->getCPF() .
+               "' WHERE id = " . ((string) $id);
         if($connection->query($sql) === TRUE) {
             return $pat;
         } else {
@@ -146,7 +146,7 @@ function writePatient($id, $data) {
 function removePatient($id) {
     global $connection;
 
-    $sql = "DELETE FROM Patient WHERE PatientID = " . ((string) $id);
+    $sql = "DELETE FROM Patient WHERE id = " . ((string) $id);
 
     if($connection->query($sql) === TRUE) {
         return "HTTP/1.0 200 OK";

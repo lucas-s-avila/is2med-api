@@ -53,11 +53,11 @@ class User implements JsonSerializable {
 
     public function jsonSerialize() {
         return array(
-            "ID" => $this->getId(),
-            "Username" => $this->getUsername(),
-            "Password" => $this->getPassword(),
-            "ProfileID" => $this->getProfileId(),
-            "GroupName" => $this->getGroup()
+            "id" => $this->getId(),
+            "username" => $this->getUsername(),
+            "password" => $this->getPassword(),
+            "profileId" => $this->getProfileId(),
+            "groupName" => $this->getGroup()
         );
     }
 }

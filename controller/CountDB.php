@@ -65,12 +65,12 @@ function countAppsID($search) {
     $sql = "SELECT COUNT(*) FROM Appointment WHERE ";
     
     if(count($search) > 1) {
-        $sql = $sql . "DoctorID = '" . $search["doctorid"] . "' AND PatientID = '" . $search["patientid"] . "'";
+        $sql = $sql . "doctorId = '" . $search["doctorId"] . "' AND patientId = '" . $search["patientId"] . "'";
     } else {
         if(!empty($search["doctorid"])) {
-            $sql = $sql . " DoctorID = '" . $search["doctorid"] . "'";
+            $sql = $sql . " doctorId = '" . $search["doctorId"] . "'";
         } else {
-            $sql = $sql . " PatientID = '" . $search["patientid"] . "'";
+            $sql = $sql . " patientId = '" . $search["patientId"] . "'";
         }
     }
 
@@ -87,12 +87,12 @@ function countExmsID($search) {
     $sql = "SELECT COUNT(*) FROM Exam WHERE ";
     
     if(count($search) > 1) {
-        $sql = $sql . "LabID = '" . $search["labid"] . "' AND PatientID = '" . $search["patientid"] . "'";
+        $sql = $sql . "labId = '" . $search["labId"] . "' AND patientId = '" . $search["patientId"] . "'";
     } else {
-        if(!empty($search["labid"])) {
-            $sql = $sql . "LabID = '" . $search["labid"] . "'";
+        if(!empty($search["labId"])) {
+            $sql = $sql . "labId = '" . $search["labId"] . "'";
         } else {
-            $sql = $sql . "PatientID = '" . $search["patientid"] . "'";
+            $sql = $sql . "patientId = '" . $search["patientId"] . "'";
         }
     }
     

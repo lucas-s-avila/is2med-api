@@ -53,11 +53,11 @@ class BasicInfo implements JsonSerializable {
 
     public function jsonSerialize() {
         return array(
-            "ID" => $this->getId(),
-            "Name" => $this->getName(),
-            "Address" => $this->getAddress(),
-            "Phone" => $this->getPhone(),
-            "Email" => $this->getEmail()
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "address" => $this->getAddress(),
+            "phone" => $this->getPhone(),
+            "email" => $this->getEmail()
         );
     }
 }

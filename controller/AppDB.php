@@ -9,20 +9,20 @@ $db = new dbObj();
 $connection =  $db->getConn();
 
 function mountApp($row) {
-    $patient = loadPat($row["PatientID"]);
-    $doc = loadDoc($row["DoctorID"]);
+    $patient = loadPat($row["patientId"]);
+    $doc = loadDoc($row["doctorId"]);
 
     if(is_null($patient) or is_null($doc)) {
         header("HTTP/1.0 404 Not Found");
         exit();
     }
 
-    $app = new Appointment($row["AppointmentID"],
-                           $row["Date"],
+    $app = new Appointment($row["id"],
+                           $row["date"],
                            $doc,
                            $patient,
-                           $row["Prescription"],
-                           $row["Notes"]);
+                           $row["prescription"],
+                           $row["notes"]);
     return $app;
 }
 
@@ -51,23 +51,23 @@ function loadAppSearch($search) {
     $sql = "SELECT * FROM Appointment WHERE ";
     
     if(!is_null($search["date"])) {
-        $sql = $sql . " Date = '" . $search["date"] . "'";
+        $sql = $sql . " date = '" . $search["date"] . "'";
         if(count($search) > 1) {
             $sql = $sql . " AND ";
         }
         unset($search["date"]);
     }
 
-    if(!is_null($search["patientid"])) {
-        $sql = $sql . " PatientID = '" . $search["patientid"] . "'";
+    if(!is_null($search["patientId"])) {
+        $sql = $sql . " patientId = '" . $search["patientId"] . "'";
         if(count($search) > 1) {
             $sql = $sql . " AND ";
         }
-        unset($search["patientid"]);
+        unset($search["patientId"]);
     }
 
-    if(!is_null($search["doctorid"])) {
-        $sql = $sql . " DoctorID = '" . $search["doctorid"] . "'";
+    if(!is_null($search["doctorId"])) {
+        $sql = $sql . " doctorId = '" . $search["doctorId"] . "'";
     }
 
     $result = $connection->query($sql);
@@ -87,7 +87,7 @@ function loadAppSearch($search) {
 function loadApp($id) {
     global $connection;
 
-    $sql = "SELECT * FROM Appointment WHERE AppointmentID = " . ((string) $id);
+    $sql = "SELECT * FROM Appointment WHERE id = " . ((string) $id);
     $result = $connection->query($sql);
 
     if ($result->num_rows > 0) {
@@ -101,13 +101,13 @@ function loadApp($id) {
 
 function writeNewAppointment($data) {
     $id = time();
-    $data["AppointmentID"] = $id;
+    $data["id"] = $id;
 
     $app = mountApp($data);
 
     global $connection;
 
-    $sql = "INSERT INTO Appointment (AppointmentID, DoctorID, PatientID, Date, Prescription, Notes) 
+    $sql = "INSERT INTO Appointment (id, doctorId, patientId, date, prescription, notes) 
                         VALUES (" . $app->getId() .
                         ", '" . $app->getDoctor()->getId() .
                         "', '" . $app->getPatient()->getId() .
@@ -127,19 +127,19 @@ function writeAppointment($id, $data) {
     $app = loadApp($id);
     
     if(gettype($app) == "object") {
-        $app->setDate($data["Date"]);
-        $app->setDoctor(mountDoc($data["DoctorID"]));
-        $app->setPatient(mountPat($data["PatientID"]));
-        $app->setPrescription($data["Prescription"]);
-        $app->setNotes($data["Notes"]);
+        $app->setDate($data["date"]);
+        $app->setDoctor(mountDoc($data["doctorId"]));
+        $app->setPatient(mountPat($data["patientId"]));
+        $app->setPrescription($data["prescription"]);
+        $app->setNotes($data["notes"]);
 
         global $connection;
-        $sql = "UPDATE Appointment SET Date = '" . $app->getDate() . 
-               "', DoctorID = '" . $app->getDoctor()->getId() . 
-               "', PatientID = '" . $app->getPatient()->getId() .
-               "', Prescription = '" . $app->getPrescription() .
-               "', Notes = '" . $app->getNotes() . 
-               "' WHERE AppointmentID = " . ((string) $id);
+        $sql = "UPDATE Appointment SET date = '" . $app->getDate() . 
+               "', doctorId = '" . $app->getDoctor()->getId() . 
+               "', patientId = '" . $app->getPatient()->getId() .
+               "', prescription = '" . $app->getPrescription() .
+               "', notes = '" . $app->getNotes() . 
+               "' WHERE id = " . ((string) $id);
         if($connection->query($sql) === TRUE) {
             return $app;
         } else {
@@ -154,7 +154,7 @@ function writeAppointment($id, $data) {
 function removeAppointment($id) {
     global $connection;
 
-    $sql = "DELETE FROM Appointment WHERE AppointmentID = " . ((string) $id);
+    $sql = "DELETE FROM Appointment WHERE id = " . ((string) $id);
 
     if($connection->query($sql) === TRUE) {
         return "HTTP/1.0 200 OK";

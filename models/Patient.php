@@ -39,9 +39,9 @@ class Patient extends BasicInfo {
 
     public function jsonSerialize() {
         $array = parent::jsonSerialize();
-        $array['Gender'] = $this->getGender();
-        $array['Birthday'] = $this->getBirthday();
-        $array['CPF'] = $this->getCpf();
+        $array['gender'] = $this->getGender();
+        $array['birthday'] = $this->getBirthday();
+        $array['cpf'] = $this->getCpf();
         return $array;
     }
 

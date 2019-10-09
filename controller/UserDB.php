@@ -6,11 +6,11 @@ $db = new dbObj();
 $connection =  $db->getConn();
 
 function mountUser($row) {
-    $user = new User($row["UserID"],
-                     $row["Username"],
-                     $row["Password"],
-                     $row["ProfileID"],
-                     $row["GroupName"]);
+    $user = new User($row["id"],
+                     $row["username"],
+                     $row["password"],
+                     $row["profileId"],
+                     $row["groupName"]);
     return $user;
 }
 
@@ -34,7 +34,7 @@ function loadUsers() {
 
 function loadUser($id) {
     global $connection;
-    $sql = "SELECT * FROM User WHERE UserID = " . ((string) $id);
+    $sql = "SELECT * FROM User WHERE id = " . ((string) $id);
     $result = $connection->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_array();
@@ -47,14 +47,14 @@ function loadUser($id) {
 
 function writeNewUser($data) {
     $id = time();
-    $data["UserID"] = $id;
+    $data["id"] = $id;
     $user = mountUser($data);
     global $connection;
-    $sql = "INSERT INTO User (UserID, Username, Password, ProfileID, GroupName) 
-                        VALUES (" . $user->getId() .
+    $sql = "INSERT INTO User (id, username, password, profileId, groupName) 
+                        VALUES (" . $id .
                         ", '" . $user->getUsername() . 
                         "', '" . $user->getPassword() .
-                        "', '" . $user->getProfileID() . 
+                        "', '" . $user->getProfileId() . 
                         "', '" . $user->getGroup() . "')";
     if($connection->query($sql) === TRUE) {
         return $user;
@@ -68,17 +68,17 @@ function writeUser($id, $data) {
     $user = loadUser($id);
     
     if(gettype($user) == "object") {
-        $user->setUsername($data["Username"]);
-        $user->setPassword($data["Password"]);
-        $user->setProfileID($data["ProfileID"]);
-        $user->setGroup($data["GroupName"]);
+        $user->setUsername($data["username"]);
+        $user->setPassword($data["password"]);
+        $user->setProfileId($data["profileId"]);
+        $user->setGroup($data["groupName"]);
         
         global $connection;
-        $sql = "UPDATE User SET Username = '" . $user->getUsername() . 
-               "', Password = '" . $user->getPassword() . 
-               "', ProfileID = '" . $user->getProfileID() .
-               "', GroupName = '" . $user->getGroup() .
-               "' WHERE UserID = " . ((string) $id);
+        $sql = "UPDATE User SET username = '" . $user->getUsername() . 
+               "', password = '" . $user->getPassword() . 
+               "', profileId = '" . $user->getProfileId() .
+               "', groupName = '" . $user->getGroup() .
+               "' WHERE id = " . ((string) $id);
         if($connection->query($sql) === TRUE) {
             return $user;
         } else {
@@ -93,7 +93,7 @@ function writeUser($id, $data) {
 function removeUser($id) {
     global $connection;
 
-    $sql = "DELETE FROM User WHERE UserID = " . ((string) $id);
+    $sql = "DELETE FROM User WHERE id = " . ((string) $id);
 
     if($connection->query($sql) === TRUE) {
         return "HTTP/1.0 200 OK";

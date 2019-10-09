@@ -7,13 +7,13 @@ $db = new dbObj();
 $connection =  $db->getConn();
 
 function mountDoc($row) {
-    $doc = new Doctor($row["DoctorID"],
-                      $row["Name"],
-                      $row["Address"],
-                      $row["Phone"],
-                      $row["Email"],
-                      $row["Specialty"],
-                      $row["CRM"]);
+    $doc = new Doctor($row["id"],
+                      $row["name"],
+                      $row["address"],
+                      $row["phone"],
+                      $row["email"],
+                      $row["specialty"],
+                      $row["crm"]);
     return $doc;
 }
 
@@ -41,7 +41,7 @@ function loadDocSearch($search) {
     $sql = "SELECT * FROM Doctor WHERE ";
     
     if(!is_null($search["name"])) {
-        $sql = $sql . " Name LIKE '%" . $search["name"] . "%'";
+        $sql = $sql . " name LIKE '%" . $search["name"] . "%'";
         if(count($search) > 1) {
             $sql = $sql . " AND ";
         }
@@ -49,7 +49,7 @@ function loadDocSearch($search) {
     }
 
     if(!is_null($search["specialty"])) {
-        $sql = $sql . " Specialty = '" . $search["specialty"] . "'";
+        $sql = $sql . " specialty = '" . $search["specialty"] . "'";
         if(count($search) > 1) {
             $sql = $sql . " AND ";
         }
@@ -57,7 +57,7 @@ function loadDocSearch($search) {
     }
 
     if(!is_null($search["crm"])) {
-        $sql = $sql . " CRM = '" . $search["crm"] . "'";
+        $sql = $sql . " crm = '" . $search["crm"] . "'";
     }
 
     $result = $connection->query($sql);
@@ -77,7 +77,7 @@ function loadDocSearch($search) {
 function loadDoc($id) {
     global $connection;
 
-    $sql = "SELECT * FROM Doctor WHERE DoctorID = " . ((string) $id);
+    $sql = "SELECT * FROM Doctor WHERE id = " . ((string) $id);
     $result = $connection->query($sql);
 
     if ($result->num_rows > 0) {
@@ -91,14 +91,14 @@ function loadDoc($id) {
 
 function writeNewDoctor($data) {
     $id = time();
-    $data["DoctorID"] = $id;
+    $data["id"] = $id;
 
     $doc = mountDoc($data);
 
     global $connection;
 
-    $sql = "INSERT INTO Doctor (DoctorID, Name, Address, Phone, Email, Specialty, CRM) 
-                        VALUES (" . $doc->getId() .
+    $sql = "INSERT INTO Doctor (id, name, address, phone, email, specialty, crm) 
+                        VALUES (" . ((string) $id) .
                         ", '" . $doc->getName() . 
                         "', '" . $doc->getAddress() .
                         "', '" . $doc->getPhone() . 
@@ -107,10 +107,10 @@ function writeNewDoctor($data) {
                         "', '" . $doc->getCrm() . "')";
     if($connection->query($sql) === TRUE) {
         $user = array(
-            "Username" => $doc->getName(),
-            "Password" => $doc->getCrm(),
-            "ProfileID" => $doc->getId(),
-            "Group" => "Doctor"
+            "username" => strtolower(explode(" ",$doc->getName())[0]),
+            "password" => $doc->getCrm(),
+            "profileId" => $id,
+            "groupName" => "doctor"
         );
         $user = writeNewUser($user);
         return $doc;
@@ -124,21 +124,21 @@ function writeDoctor($id, $data) {
     $doc = loadDoc($id);
     
     if(gettype($doc) == "object") {
-        $doc->setName($data["Name"]);
-        $doc->setAddress($data["Address"]);
-        $doc->setPhone($data["Phone"]);
-        $doc->setEmail($data["Email"]);
-        $doc->setSpecialty($data["Specialty"]);
-        $doc->setCrm($data["CRM"]);
+        $doc->setName($data["name"]);
+        $doc->setAddress($data["address"]);
+        $doc->setPhone($data["phone"]);
+        $doc->setEmail($data["email"]);
+        $doc->setSpecialty($data["specialty"]);
+        $doc->setCrm($data["crm"]);
 
         global $connection;
-        $sql = "UPDATE Doctor SET Name = '" . $doc->getName() . 
-               "', Address = '" . $doc->getAddress() . 
-               "', Phone = '" . $doc->getPhone() .
-               "', Email = '" . $doc->getEmail() .
-               "', Specialty = '" . $doc->getSpecialty() . 
-               "', CRM = '" . $doc->getCRM() .
-               "' WHERE DoctorID = " . ((string) $id);
+        $sql = "UPDATE Doctor SET name = '" . $doc->getName() . 
+               "', address = '" . $doc->getAddress() . 
+               "', phone = '" . $doc->getPhone() .
+               "', email = '" . $doc->getEmail() .
+               "', specialty = '" . $doc->getSpecialty() . 
+               "', crm = '" . $doc->getCRM() .
+               "' WHERE id = " . ((string) $id);
         if($connection->query($sql) === TRUE) {
             return $doc;
         } else {
@@ -153,7 +153,7 @@ function writeDoctor($id, $data) {
 function removeDoctor($id) {
     global $connection;
 
-    $sql = "DELETE FROM Doctor WHERE DoctorID = " . ((string) $id);
+    $sql = "DELETE FROM Doctor WHERE id = " . ((string) $id);
 
     if($connection->query($sql) === TRUE) {
         return "HTTP/1.0 200 OK";

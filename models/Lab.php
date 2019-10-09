@@ -29,8 +29,8 @@ class Lab extends BasicInfo {
 
     public function jsonSerialize() {
         $array = parent::jsonSerialize();
-        $array['ExamType'] = $this->getExamType();
-        $array['CNPJ'] = $this->getCnpj();
+        $array['examType'] = $this->getExamType();
+        $array['cnpj'] = $this->getCnpj();
         return $array;
     }
 

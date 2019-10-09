@@ -65,12 +65,12 @@ class Appointment implements JsonSerializable {
 
     public function jsonSerialize() {
         return array(
-            "ID" => $this->getId(),
-            "Date" => $this->getDate(),
-            "Doctor" => $this->getDoctor(),
-            "Patient" => $this->getPatient(),
-            "Prescription" => $this->getPrescription(),
-            "Notes" => $this->getNotes()            
+            "id" => $this->getId(),
+            "date" => $this->getDate(),
+            "doctor" => $this->getDoctor(),
+            "patient" => $this->getPatient(),
+            "prescription" => $this->getPrescription(),
+            "notes" => $this->getNotes()            
         );
     }
 }

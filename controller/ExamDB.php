@@ -9,20 +9,20 @@ $db = new dbObj();
 $connection =  $db->getConn();
 
 function mountExm($row) {
-    $patient = loadPat($row["PatientID"]);
-    $lab = loadLab($row["LabID"]);
+    $patient = loadPat($row["patientId"]);
+    $lab = loadLab($row["labId"]);
 
     if(is_null($patient) or is_null($lab)) {
         header("HTTP/1.0 404 Not Found");
         exit();
     }
 
-    $exm = new Exam($row["ExamID"],
-                    $row["Date"],
+    $exm = new Exam($row["id"],
+                    $row["date"],
                     $patient,
                     $lab,
-                    $row["ExamType"],
-                    $row["Result"]);
+                    $row["examType"],
+                    $row["result"]);
     return $exm;
 }
 
@@ -51,31 +51,31 @@ function loadExmsSearch($search) {   //date, exam type, labID, patientID
     $sql = "SELECT * FROM Exam WHERE ";
     
     if(!is_null($search["date"])) {
-        $sql = $sql . " Date = '" . $search["date"] . "'";
+        $sql = $sql . " date = '" . $search["date"] . "'";
         if(count($search) > 1) {
             $sql = $sql . " AND ";
         }
         unset($search["date"]);
     }
 
-    if(!is_null($search["examtype"])) {
-        $sql = $sql . " ExamType = '" . $search["examtype"] . "'";
+    if(!is_null($search["examtType"])) {
+        $sql = $sql . " examType = '" . $search["examtype"] . "'";
         if(count($search) > 1) {
             $sql = $sql . " AND ";
         }
         unset($search["examtype"]);
     }
 
-    if(!is_null($search["patientid"])) {
-        $sql = $sql . " PatientID = '" . $search["patientid"] . "'";
+    if(!is_null($search["patientId"])) {
+        $sql = $sql . " patientId = '" . $search["patientId"] . "'";
         if(count($search) > 1) {
             $sql = $sql . " AND ";
         }
-        unset($search["patientid"]);
+        unset($search["patientId"]);
     }
 
-    if(!is_null($search["labid"])) {
-        $sql = $sql . " LabID = '" . $search["labid"] . "'";
+    if(!is_null($search["labId"])) {
+        $sql = $sql . " labId = '" . $search["labId"] . "'";
     }
 
     $result = $connection->query($sql);
@@ -95,7 +95,7 @@ function loadExmsSearch($search) {   //date, exam type, labID, patientID
 function loadExm($id) {
     global $connection;
 
-    $sql = "SELECT * FROM Exam WHERE ExamID = " . ((string) $id);
+    $sql = "SELECT * FROM Exam WHERE id = " . ((string) $id);
     $result = $connection->query($sql);
 
     if ($result->num_rows > 0) {
@@ -109,13 +109,13 @@ function loadExm($id) {
 
 function writeNewExam($data) {
     $id = time();
-    $data["ExamID"] = $id;
+    $data["id"] = $id;
 
     $exm = mountExm($data);
 
     global $connection;
 
-    $sql = "INSERT INTO Exam (ExamID, LabID, PatientID, Date, ExamType, Result) 
+    $sql = "INSERT INTO Exam (id, labId, patientId, date, examType, result) 
                         VALUES (" . $exm->getId() .
                         ", '" . $exm->getLab()->getId() .
                         "', '" . $exm->getPatient()->getId() . 
@@ -135,19 +135,19 @@ function writeExam($id, $data) {
     $exm = loadExm($id);
     
     if(gettype($exm) == "object") {
-        $exm->setDate($data["Date"]);
-        $exm->setPatient(mountPat($data["PatientID"]));
-        $exm->setLab(mountLab($data["LabID"]));
-        $exm->setType($data["ExamType"]);
-        $exm->setResult($data["Result"]);
+        $exm->setDate($data["date"]);
+        $exm->setPatient(mountPat($data["patientId"]));
+        $exm->setLab(mountLab($data["labId"]));
+        $exm->setType($data["examType"]);
+        $exm->setResult($data["result"]);
 
         global $connection;
         $sql = "UPDATE Exam SET Date = '" . $exm->getDate() . 
-               "', PatientID = '" . $exm->getPatient()->getId() .
-               "', LabID = '" . $exm->getLab()->getId() .
-               "', ExamType = '" . $exm->getType() .
-               "', Result = '" . $exm->getResult() . 
-               "' WHERE ExamID = " . ((string) $id);
+               "', patientId = '" . $exm->getPatient()->getId() .
+               "', labId = '" . $exm->getLab()->getId() .
+               "', examType = '" . $exm->getType() .
+               "', result = '" . $exm->getResult() . 
+               "' WHERE id = " . ((string) $id);
         if($connection->query($sql) === TRUE) {
             return $exm;
         } else {
@@ -162,7 +162,7 @@ function writeExam($id, $data) {
 function removeExam($id) {
     global $connection;
 
-    $sql = "DELETE FROM Exam WHERE ExamID = " . ((string) $id);
+    $sql = "DELETE FROM Exam WHERE id = " . ((string) $id);
 
     if($connection->query($sql) === TRUE) {
         return "HTTP/1.0 200 OK";

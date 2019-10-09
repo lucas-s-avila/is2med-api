@@ -6,13 +6,13 @@ $db = new dbObj();
 $connection =  $db->getConn();
 
 function mountLab($row) {
-    $lab = new Lab($row["LabID"],
-                      $row["Name"],
-                      $row["Address"],
-                      $row["Phone"],
-                      $row["Email"],
-                      $row["ExamType"],
-                      $row["CNPJ"]);
+    $lab = new Lab($row["id"],
+                      $row["name"],
+                      $row["address"],
+                      $row["phone"],
+                      $row["email"],
+                      $row["examType"],
+                      $row["cnpj"]);
     return $lab;
 }
 
@@ -39,7 +39,7 @@ function loadLabSearch($search) {
     global $connection;
 
     $sql = "SELECT * FROM Lab WHERE ";
-    $sql = $sql . "Name LIKE '%" . $search["name"] . "%'";
+    $sql = $sql . "name LIKE '%" . $search["name"] . "%'";
 
     $result = $connection->query($sql);
 
@@ -59,7 +59,7 @@ function loadLabSearch($search) {
 function loadLab($id) {
     global $connection;
 
-    $sql = "SELECT * FROM Lab WHERE LabID = " . ((string) $id);
+    $sql = "SELECT * FROM Lab WHERE id = " . ((string) $id);
     $result = $connection->query($sql);
 
     if ($result->num_rows > 0) {
@@ -73,14 +73,14 @@ function loadLab($id) {
 
 function writeNewLab($data) {
     $id = time();
-    $data["LabID"] = $id;
+    $data["id"] = $id;
 
     $lab = mountLab($data);
 
     global $connection;
 
-    $sql = "INSERT INTO Lab (LabID, Name, Address, Phone, Email, ExamType, CNPJ) 
-                        VALUES (" . $lab->getId() .
+    $sql = "INSERT INTO Lab (id, name, address, phone, email, examType, cnpj) 
+                        VALUES (" . ((string) $id) .
                         ", '" . $lab->getName() . 
                         "', '" . $lab->getAddress() .
                         "', '" . $lab->getPhone() . 
@@ -89,10 +89,10 @@ function writeNewLab($data) {
                         "', '" . $lab->getCnpj() . "')";
     if($connection->query($sql) === TRUE) {
         $user = array(
-            "Username" => $lab->getName(),
-            "Password" => $lab->getCnpj(),
-            "ProfileID" => $lab->getId(),
-            "Group" => "Lab"
+            "username" => strtolower(explode(" ",$lab->getName())[0]),
+            "password" => $lab->getCnpj(),
+            "profileId" => $id,
+            "groupName" => "lab"
         );
         $user = writeNewUser($user);
         return $lab;
@@ -106,21 +106,21 @@ function writeLab($id, $data) {
     $lab = loadLab($id);
     
     if(gettype($lab) == "object") {
-        $lab->setName($data["Name"]);
-        $lab->setAddress($data["Address"]);
-        $lab->setPhone($data["Phone"]);
-        $lab->setEmail($data["Email"]);
-        $lab->setExamType($data["ExamType"]);
-        $lab->setCnpj($data["CNPJ"]);
+        $lab->setName($data["name"]);
+        $lab->setAddress($data["address"]);
+        $lab->setPhone($data["phone"]);
+        $lab->setEmail($data["email"]);
+        $lab->setExamType($data["examType"]);
+        $lab->setCnpj($data["cnpj"]);
 
         global $connection;
-        $sql = "UPDATE Lab SET Name = '" . $lab->getName() . 
-               "', Address = '" . $lab->getAddress() . 
-               "', Phone = '" . $lab->getPhone() .
-               "', Email = '" . $lab->getEmail() .
-               "', ExamType = '" . $lab->getExamType() . 
-               "', CNPJ = '" . $lab->getCNPJ() .
-               "' WHERE LabID = " . ((string) $id);
+        $sql = "UPDATE Lab SET name = '" . $lab->getName() . 
+               "', address = '" . $lab->getAddress() . 
+               "', phone = '" . $lab->getPhone() .
+               "', email = '" . $lab->getEmail() .
+               "', examType = '" . $lab->getExamType() . 
+               "', cnpj = '" . $lab->getCNPJ() .
+               "' WHERE id = " . ((string) $id);
         if($connection->query($sql) === TRUE) {
             return $lab;
         } else {
@@ -135,11 +135,12 @@ function writeLab($id, $data) {
 function removeLab($id) {
     global $connection;
 
-    $sql = "DELETE FROM Lab WHERE LabID = " . ((string) $id);
+    $sql = "DELETE FROM Lab WHERE id = " . ((string) $id);
 
     if($connection->query($sql) === TRUE) {
         return "HTTP/1.0 200 OK";
     } else {
+        echo $connection->error;
         return "HTTP/1.0 404 Not Found";
     }
 }

@@ -45,7 +45,6 @@ switch($request_method) {
         }
         break;
     default:
-        header("HTTP/1.0 405 Method Not Allowed");
         break;
 }
 
@@ -79,7 +78,8 @@ function insertLab() {
         header("Content-Type: application/json");
         echo json_encode($response);
     } else {
-        header($response);
+        header("HTTP/1.0 400 Bad Request");
+        header("Content-Type: application/json");
         echo json_encode($response);
     }
 }
